@@ -7,7 +7,7 @@ output: html_document
 
 # Load dataset
 
-Load the downloaded dataset from https://data.lacity.org/A-Well-Run-City/MyLA311-Service-Request-Data-2016/ndkd-k878
+Load useful packages and the downloaded dataset from https://data.lacity.org/A-Well-Run-City/MyLA311-Service-Request-Data-2016/ndkd-k878
 
 ```{r load}
 setwd("~/Desktop/DSO545/Final project")
@@ -16,6 +16,9 @@ library(dplyr)
 library(ggplot2)
 library(lubridate)
 library(stringr)
+library(ggmap)
+library(zipcode)
+library(choroplethrZip)  #http://stackoverflow.com/questions/30787877/making-a-zip-code-choropleth-in-r-using-ggplot2-and-ggmap
 request_data = read.csv("raw data/MyLA311_Service_Request_Data_2016.csv")
 ```
 
@@ -60,4 +63,77 @@ set.seed(1)
 sampled_data = sample_n(request_data, 1000)
 ```
 
+## Geographical analysis
 
+Plot the contour plot for all the calls, we can find that there are two centers.
+
+```{r map}
+LA_map = qmap("Los Angeles", zoom = 10, maptype = "road")
+LA_map + 
+    stat_density2d(data = sampled_data,
+                   aes(x = Longitude, y = Latitude, fill = ..level..),
+                   geom = "polygon", alpha = 0.3) +
+    scale_fill_gradient(low = "white", high = "darkred")
+```
+
+Analysis on zipcode
+
+```{r map2}
+sampled_zip = merge(sampled_data, zipcode, by.x = "ZipCode", by.y = "zip")
+LA_map +   
+    geom_point(data = sampled_data,
+               aes(x = Longitude, y = Latitude),
+               size = 5, alpha = 0.1, color = "darkred")
+
+requests_zip = sampled_data %>% 
+    group_by(ZipCode) %>%
+    filter(!ZipCode %in% c("0", "")) %>%
+    summarise(value = n())
+colnames(requests_zip) = c("region", "value") 
+zip_vec = unique(requests_zip$region)
+
+# plot all zips in LA
+zip_choropleth(requests_zip,
+               county_zoom=6037, 
+               title="Requests number by zipcode",
+               legend="Requests numbers")
+
+# plot only the zips appear in the data
+zip_choropleth(requests_zip, 
+               zip_zoom = zip_vec, 
+               title="Requests number by zipcode",
+               legend="Requests numbers")
+
+```
+
+Plot for the whole dataset
+
+```{r all data}
+request_data$ZipCode = str_replace_all(request_data$ZipCode, "[a-zA-Z ,]*", "")
+requests_zip = request_data %>% 
+    group_by(ZipCode) %>%
+    filter(!ZipCode %in% c("0", "", "9008")) %>%
+    summarise(value = n())
+colnames(requests_zip) = c("region", "value") 
+
+
+zip_vec = unique(requests_zip$region)
+
+# plot all zips in LA
+zip_choropleth(requests_zip,
+               county_zoom=6037, 
+               title="Requests numbers by zipcode",
+               legend="Requests numbers")
+
+# plot only the zips appear in the data
+zip_choropleth(requests_zip, 
+               zip_zoom = zip_vec, 
+               title="Requests numbers by zipcode",
+               legend="Requests numbers")
+```
+
+
+
+## Analysis on request sources and types
+
+## Analysis by time
