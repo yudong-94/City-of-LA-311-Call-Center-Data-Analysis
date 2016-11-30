@@ -17,7 +17,6 @@ library(ggplot2)
 library(lubridate)
 library(stringr)
 library(ggmap)
-library(zipcode)
 library(choroplethrZip) #https://github.com/arilamstein/choroplethrZip
 request_data = read.csv("raw data/MyLA311_Service_Request_Data_2016.csv")
 ```
@@ -35,6 +34,8 @@ request_data$ServiceDate = str_replace_all(request_data$ServiceDate, " [0-9]{2}:
 request_data$ServiceDate = mdy(request_data$ServiceDate)
 # attention: there are many obviously unreasonable records: many records with service date of 1900/01/01, and some other service dates in 2017 or later
 request_data$ClosedDate = mdy_hms(request_data$ClosedDate)
+# adjust data in zipcode column
+request_data$ZipCode = str_replace_all(request_data$ZipCode, "[a-zA-Z ,]*", "")
 ```
 
 Calculate new variables:  
@@ -59,7 +60,7 @@ nrow(filter(request_data, is.na(ClosedDate)))/ nrow(request_data)
 Sampling 1000 observations from the whole dataset.
 
 ```{r sampling}
-# load("processed_requests.RData")
+# load("processed_requests2.RData")
 set.seed(1)
 sampled_data = sample_n(request_data, 1000)
 ```
@@ -110,7 +111,6 @@ zip_choropleth(requests_zip,
 Plot for the whole dataset
 
 ```{r all data}
-request_data$ZipCode = str_replace_all(request_data$ZipCode, "[a-zA-Z ,]*", "")
 requests_zip = request_data %>% 
     group_by(ZipCode) %>%
     filter(!ZipCode %in% c("0", "", "9008")) %>%
