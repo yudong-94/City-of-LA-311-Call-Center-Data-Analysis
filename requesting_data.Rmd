@@ -18,7 +18,7 @@ library(lubridate)
 library(stringr)
 library(ggmap)
 library(zipcode)
-library(choroplethrZip)  #http://stackoverflow.com/questions/30787877/making-a-zip-code-choropleth-in-r-using-ggplot2-and-ggmap
+library(choroplethrZip) #https://github.com/arilamstein/choroplethrZip
 request_data = read.csv("raw data/MyLA311_Service_Request_Data_2016.csv")
 ```
 
@@ -56,9 +56,10 @@ nrow(filter(request_data, is.na(ClosedDate)))/ nrow(request_data)
 
 # Trial run for sampled data
 
-Sampling 1000 observations from the whole dataset
+Sampling 1000 observations from the whole dataset.
 
 ```{r sampling}
+# load("processed_requests.RData")
 set.seed(1)
 sampled_data = sample_n(request_data, 1000)
 ```
@@ -132,7 +133,35 @@ zip_choropleth(requests_zip,
                legend="Requests numbers")
 ```
 
+Contrast with population by zipcode
 
+```{r pop zip}
+population_zip = read.csv("zip_population_2010_census.csv")
+population_zip = select(population_zip, Zip.Code, Total.Population)
+colnames(population_zip) = c("region", "value")
+population_zip$region = as.character(population_zip$region)
+zip_vec2 = unique(population_zip$region)
+zip_choropleth(population_zip, 
+               zip_zoom = zip_vec, 
+               title="Population by zipcode",
+               legend="Population")
+```
+
+Summary statistics
+
+```{r stat}
+requests_zip %>%
+    mutate(requests_prop = round(value / sum(value), 3)) %>%
+    arrange(-requests_prop) %>%
+    top_n(10)
+population_zip %>%
+    filter(region %in% zip_vec) %>%
+    mutate(pop_prop = round(value / sum(value), 3)) %>%
+    arrange(-pop_prop) %>%
+    top_n(10)
+```
+
+The requests are more concentrated in certain areas, and there are some differences between the lists of most frequent zipcodes
 
 ## Analysis on request sources and types
 
