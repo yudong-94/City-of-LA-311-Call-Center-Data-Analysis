@@ -1,0 +1,17 @@
+{
+    "contents" : "\n# This is the server logic for a Shiny web application.\n# You can find out more about building applications with Shiny here:\n#\n# http://shiny.rstudio.com\n#\n\nlibrary(shiny)\nsource(\"requests_plot.R\")\n\n\n\nserver <- function(input, output) {\n    \n    rv = reactiveValues(data = \"\")\n    \n    # if we click the buttom\n    observeEvent(input$button, {\n        rv$data = \"Bulky Items\"\n    }) \n    \n    output$plot <- renderPlot(zip_plot_customized(sampled_data, rv$data))\n    \n    output$click_info <- renderPrint({\n        cat(\"input$plot_click:\\n\")\n        str(input$plot_click)\n    })\n}",
+    "created" : 1480560032048.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1014597687",
+    "id" : "DEC66248",
+    "lastKnownWriteTime" : 1480574294,
+    "path" : "~/Desktop/DSO545/Final project/fight-on/interactive application/server.R",
+    "project_path" : "server.R",
+    "properties" : {
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "type" : "r_source"
+}

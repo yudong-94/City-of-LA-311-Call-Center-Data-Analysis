@@ -1,0 +1,17 @@
+{
+    "contents" : "\n# This is the user-interface definition of a Shiny web application.\n# You can find out more about building applications with Shiny here:\n#\n# http://shiny.rstudio.com\n#\n\nlibrary(shiny)\n\nui <- fluidPage(\n    actionButton(inputId = \"button\",\n                 label = \"Bulky Items\"),\n    \n    plotOutput(outputId = \"plot\", click = \"plot_click\")\n\n)",
+    "created" : 1480560031518.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3862314919",
+    "id" : "2CA23F48",
+    "lastKnownWriteTime" : 1480566801,
+    "path" : "~/Desktop/DSO545/Final project/fight-on/interactive application/ui.R",
+    "project_path" : "ui.R",
+    "properties" : {
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "type" : "r_source"
+}

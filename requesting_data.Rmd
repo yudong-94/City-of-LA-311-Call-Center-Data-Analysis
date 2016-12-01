@@ -112,12 +112,13 @@ zip_choropleth(requests_zip,
 Plot for the whole dataset
 
 ```{r all data}
+request_data_plot = select(request_data, ZipCode, RequestType)
+
 requests_zip = request_data %>% 
     group_by(ZipCode) %>%
     filter(!ZipCode %in% c("0", "", "9008")) %>%
     summarise(value = n())
 colnames(requests_zip) = c("region", "value") 
-
 
 zip_vec = unique(requests_zip$region)
 
