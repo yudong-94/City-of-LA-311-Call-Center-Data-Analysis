@@ -17,6 +17,7 @@ library(ggplot2)
 library(lubridate)
 library(stringr)
 library(ggmap)
+library(plotly)
 library(choroplethrZip) #https://github.com/arilamstein/choroplethrZip
 request_data = read.csv("raw data/MyLA311_Service_Request_Data_2016.csv")
 ```
@@ -147,6 +148,21 @@ zip_choropleth(population_zip,
                legend="Population")
 ```
 
+Making interative plots
+
+```{r plotly}
+p1 = zip_choropleth(requests_zip, 
+               zip_zoom = zip_vec, 
+               title="Requests numbers by zipcode",
+               legend="Requests numbers")
+ggplotly(p1)
+p2 = zip_choropleth(population_zip, 
+               zip_zoom = zip_vec, 
+               title="Population by zipcode",
+               legend="Population")
+ggplotly(p2)
+```
+
 Summary statistics
 
 ```{r stat}
@@ -154,6 +170,7 @@ requests_zip %>%
     mutate(requests_prop = round(value / sum(value), 3)) %>%
     arrange(-requests_prop) %>%
     top_n(10)
+
 population_zip %>%
     filter(region %in% zip_vec) %>%
     mutate(pop_prop = round(value / sum(value), 3)) %>%
@@ -162,6 +179,7 @@ population_zip %>%
 ```
 
 The requests are more concentrated in certain areas, and there are some differences between the lists of most frequent zipcodes
+
 
 ## Analysis on request sources and types
 
