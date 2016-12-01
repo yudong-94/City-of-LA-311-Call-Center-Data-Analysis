@@ -12,7 +12,7 @@ source("requests_plot.R")
 
 server <- function(input, output) {
     
-    rv = reactiveValues(data = "")
+    rv = reactiveValues(type = "", time_start = "", )
     
     # if we click the buttom
     observeEvent(input$button, {

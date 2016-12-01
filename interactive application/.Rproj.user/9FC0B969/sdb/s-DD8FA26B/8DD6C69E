@@ -1,0 +1,17 @@
+{
+    "contents" : "library(plotly)\nlibrary(choroplethrZip)\n\nload(\"data_for_shiny.RData\")\n\n# # using spark  (cmd+shift+c to uncomment the whole paragraph)\n# \n# library(sparklyr)\n# library(dplyr)\n# \n# sc <- spark_connect(master = \"local\")\n# \n# requests_data = copy_to(dest = sc, df = sampled_data, name = \"requests\", overwrite = TRUE)\n# \n# zip_plot_customized_spark = function(data, type) {\n#     requests_zip_filtered = data %>%\n#         filter(RequestType == type) %>%\n#         group_by(ZipCode) %>%\n#         filter(!ZipCode %in% c(\"0\", \"\", \"9008\")) %>%\n#         summarise(value = n())\n#     \n#     mydata <- requests_zip_filtered %>%\n#         collect\n#     \n#     colnames(mydata) = c(\"region\", \"value\") \n#     zip_vec = unique(mydata$region)\n#     \n#     zip_choropleth(mydata, \n#                    zip_zoom = zip_vec, \n#                    title=\"Requests number by zipcode\",\n#                    legend=\"Requests numbers\")\n# }\n# \n# # zip_plot_customized_spark(requests_data, \"Bulky Items\")\n\n\nzip_plot_customized = function(data, type, time_start, time_end) {\n    if (type == \"\") {\n        requests_zip_filtered = data %>%\n            filter(time_start < CreatedDate, time_end > CreatedDate) %>%\n            group_by(ZipCode) %>%\n            filter(!ZipCode %in% c(\"0\", \"\", \"9008\")) %>%\n            summarise(value = n())\n    } else {\n        requests_zip_filtered = data %>%\n            filter(RequestType == type,\n                   time_start < CreatedDate, \n                   time_end > CreatedDate) %>%\n            group_by(ZipCode) %>%\n            filter(!ZipCode %in% c(\"0\", \"\", \"9008\")) %>%\n            summarise(value = n())\n    }\n\n    colnames(requests_zip_filtered) = c(\"region\", \"value\") \n    zip_vec = unique(requests_zip_filtered$region)\n    \n    zip_choropleth(requests_zip_filtered, \n                   zip_zoom = zip_vec, \n                   title=\"Requests number by zipcode\",\n                   legend=\"Requests numbers\")\n}\n\nzip_plot_customized(sampled_data, \"Bulky Items\", \"2015-12-01\", \"2016-03-01\")\n\n# requests_zip_filtered = sampled_data %>%\n#     filter(RequestType == \"Bulky Items\",\n#            \"2016-12-01\" < CreatedDate, \n#            \"2016-03-01\" > CreatedDate) %>%\n#     group_by(ZipCode) %>%\n#     filter(!ZipCode %in% c(\"0\", \"\", \"9008\")) %>%\n#     summarise(value = n())\n\n",
+    "created" : 1480628022476.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3266428203",
+    "id" : "8DD6C69E",
+    "lastKnownWriteTime" : 1480632381,
+    "path" : "~/Desktop/DSO545/Final project/fight-on/interactive application/requests_plot.R",
+    "project_path" : "requests_plot.R",
+    "properties" : {
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "type" : "r_source"
+}
