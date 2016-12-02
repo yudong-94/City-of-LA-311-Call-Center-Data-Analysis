@@ -1,12 +1,12 @@
 {
-    "contents" : "\n# This is the server logic for a Shiny web application.\n# You can find out more about building applications with Shiny here:\n#\n# http://shiny.rstudio.com\n#\n\nlibrary(shiny)\nsource(\"requests_plot.R\")\n\n\n\nserver <- function(input, output) {\n    \n    rv = reactiveValues(type = \"\", time_start = \"\", time_end = \"2016-11-17\")\n    \n    # if we click the buttom\n    observeEvent(input$button, {\n        rv$data = \"Bulky Items\"\n    }) \n    \n    output$plot <- renderPlot(zip_plot_customized(sampled_data, rv$data))\n    \n    output$click_info <- renderPrint({\n        cat(\"input$plot_click:\\n\")\n        str(input$plot_click)\n    })\n}",
+    "contents" : "\n# This is the server logic for a Shiny web application.\n# You can find out more about building applications with Shiny here:\n#\n# http://shiny.rstudio.com\n#\n\nlibrary(shiny)\nsource(\"requests_plot.R\")\n\n\n\nserver <- function(input, output) {\n    \n    rv = reactiveValues(type = \"\", time_start = \"2015-08-01\", time_end = \"2016-11-30\")\n    \n    # if we click the buttom\n    observeEvent(input$button, {\n        rv$type = \"Bulky Items\"\n        rv$time_start = as.POSIXct(input$daterange[1])\n        rv$time_end = as.POSIXct(input$daterange[2])\n    }) \n    \n    output$plot <- renderPlot(zip_plot_customized(\n        sampled_data, rv$type, rv$time_start, rv$time_end))\n    \n    output$click_info <- renderPrint({\n        cat(\"input$plot_click:\\n\")\n        str(input$plot_click)\n    })\n}",
     "created" : 1480627983939.000,
-    "dirty" : true,
+    "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "1544177765",
+    "hash" : "2557522824",
     "id" : "7ADD49A2",
-    "lastKnownWriteTime" : 1480632524,
+    "lastKnownWriteTime" : 1480639430,
     "path" : "~/Desktop/DSO545/Final project/fight-on/interactive application/server.R",
     "project_path" : "server.R",
     "properties" : {

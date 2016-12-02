@@ -1,12 +1,12 @@
 {
-    "contents" : "\n# This is the user-interface definition of a Shiny web application.\n# You can find out more about building applications with Shiny here:\n#\n# http://shiny.rstudio.com\n#\n\nlibrary(shiny)\n\nui <- fluidPage(\n    actionButton(inputId = \"button\",\n                 label = \"Bulky Items\"),\n    \n    plotOutput(outputId = \"plot\", click = \"plot_click\")\n\n)",
+    "contents" : "\n# This is the user-interface definition of a Shiny web application.\n# You can find out more about building applications with Shiny here:\n#\n# http://shiny.rstudio.com\n#\n\nlibrary(shiny)\n\nui <- fluidPage(\n    dateRangeInput(\"daterange\", \"Time Period:\",\n                   start  = \"2015-08-01\",\n                   end    = \"2016-11-30\",\n                   min    = \"2015-08-01\",\n                   max    = \"2016-11-30\",\n                   format = \"mm/dd/yy\",\n                   separator = \" - \"),\n    \n    actionButton(inputId = \"button\",\n                 label = \"Bulky Items\"),\n    \n    plotOutput(outputId = \"plot\", click = \"plot_click\")\n\n)",
     "created" : 1480627983786.000,
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "3862314919",
+    "hash" : "467252960",
     "id" : "ADD3AE58",
-    "lastKnownWriteTime" : 1480566801,
+    "lastKnownWriteTime" : 1480639430,
     "path" : "~/Desktop/DSO545/Final project/fight-on/interactive application/ui.R",
     "project_path" : "ui.R",
     "properties" : {
