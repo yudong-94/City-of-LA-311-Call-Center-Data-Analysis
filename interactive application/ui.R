@@ -7,6 +7,12 @@
 
 library(shiny)
 
+request_types = c("Bulky Items", "Dead Animal Removal", "Graffiti Removal",
+                  "Electronic Waste", "Illegal Dumping Pickup", "Other",
+                  "Metal/Household Appliances", "Homeless Encampment",
+                  "Single Streetlight Issue", 
+                 "Multiple Streetlight Issue", "Feedback", "Report Water Waste")
+
 ui <- fluidPage(
     dateRangeInput("daterange", "Time Period:",
                    start  = "2015-08-01",
@@ -16,8 +22,12 @@ ui <- fluidPage(
                    format = "mm/dd/yy",
                    separator = " - "),
     
+    selectInput(inputId = "types", 
+                label = "Request Types", 
+                choices = request_types, multiple = TRUE, selectize = FALSE),
+    
     actionButton(inputId = "button",
-                 label = "Bulky Items"),
+                 label = "Submit"),
     
     plotOutput(outputId = "plot", click = "plot_click")
 

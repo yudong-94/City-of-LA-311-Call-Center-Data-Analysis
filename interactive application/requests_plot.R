@@ -1,7 +1,8 @@
-library(plotly)
 library(choroplethrZip)
 
 load("data_for_shiny.RData")
+
+
 
 # # using spark  (cmd+shift+c to uncomment the whole paragraph)
 # 
@@ -35,21 +36,13 @@ load("data_for_shiny.RData")
 
 
 zip_plot_customized = function(data, type, time_start, time_end) {
-    if (type == "") {
-        requests_zip_filtered = data %>%
-            filter(time_start < CreatedDate, time_end > CreatedDate) %>%
-            group_by(ZipCode) %>%
-            filter(!ZipCode %in% c("0", "", "9008")) %>%
-            summarise(value = n())
-    } else {
-        requests_zip_filtered = data %>%
-            filter(RequestType == type,
-                   time_start < CreatedDate, 
-                   time_end > CreatedDate) %>%
-            group_by(ZipCode) %>%
-            filter(!ZipCode %in% c("0", "", "9008")) %>%
-            summarise(value = n())
-    }
+    requests_zip_filtered = data %>%
+        filter(RequestType %in% type,
+               time_start < CreatedDate, 
+               time_end > CreatedDate) %>%
+        group_by(ZipCode) %>%
+        filter(!ZipCode %in% c("0", "", "9008")) %>%
+        summarise(value = n())
 
     colnames(requests_zip_filtered) = c("region", "value") 
     zip_vec = unique(requests_zip_filtered$region)
@@ -61,12 +54,4 @@ zip_plot_customized = function(data, type, time_start, time_end) {
 }
 
 zip_plot_customized(sampled_data, "Bulky Items", "2015-12-01", "2016-03-01")
-
-# requests_zip_filtered = sampled_data %>%
-#     filter(RequestType == "Bulky Items",
-#            "2016-12-01" < CreatedDate, 
-#            "2016-03-01" > CreatedDate) %>%
-#     group_by(ZipCode) %>%
-#     filter(!ZipCode %in% c("0", "", "9008")) %>%
-#     summarise(value = n())
 

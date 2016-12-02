@@ -8,15 +8,19 @@
 library(shiny)
 source("requests_plot.R")
 
-
+request_types = c("Bulky Items", "Dead Animal Removal", "Graffiti Removal",
+                  "Electronic Waste", "Illegal Dumping Pickup", "Other",
+                  "Metal/Household Appliances", "Homeless Encampment",
+                  "Single Streetlight Issue", 
+                  "Multiple Streetlight Issue", "Feedback", "Report Water Waste")
 
 server <- function(input, output) {
     
-    rv = reactiveValues(type = "", time_start = "2015-08-01", time_end = "2016-11-30")
+    rv = reactiveValues(type = request_types, time_start = "2015-08-01", time_end = "2016-11-30")
     
     # if we click the buttom
     observeEvent(input$button, {
-        rv$type = "Bulky Items"
+        rv$type = input$types
         rv$time_start = as.POSIXct(input$daterange[1])
         rv$time_end = as.POSIXct(input$daterange[2])
     }) 
