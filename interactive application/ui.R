@@ -24,7 +24,7 @@ ui <- fluidPage(
     
     selectInput(inputId = "types", 
                 label = "Request Types", 
-                choices = request_types, multiple = TRUE, selectize = FALSE),
+                choices = request_types, multiple = TRUE, selectize = TRUE),
     
     actionButton(inputId = "button",
                  label = "Submit"),

@@ -1,8 +1,7 @@
 library(choroplethrZip)
+library(dplyr)
 
-load("data_for_shiny.RData")
-
-
+ load("all_data_for_shiny.RData")
 
 # # using spark  (cmd+shift+c to uncomment the whole paragraph)
 # 
@@ -53,5 +52,5 @@ zip_plot_customized = function(data, type, time_start, time_end) {
                    legend="Requests numbers")
 }
 
-zip_plot_customized(sampled_data, "Bulky Items", "2015-12-01", "2016-03-01")
+# zip_plot_customized(request_data, "Bulky Items", "2015-12-01", "2016-03-01")
 

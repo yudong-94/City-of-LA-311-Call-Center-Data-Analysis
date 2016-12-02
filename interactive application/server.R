@@ -26,7 +26,7 @@ server <- function(input, output) {
     }) 
     
     output$plot <- renderPlot(zip_plot_customized(
-        sampled_data, rv$type, rv$time_start, rv$time_end))
+        request_data, rv$type, rv$time_start, rv$time_end))
     
     output$click_info <- renderPrint({
         cat("input$plot_click:\n")
