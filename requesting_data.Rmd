@@ -132,7 +132,8 @@ zip_choropleth(requests_zip,
 zip_choropleth(requests_zip, 
                zip_zoom = zip_vec, 
                title="Requests numbers by zipcode",
-               legend="Requests numbers")
+               legend="Requests numbers") +
+    scale_fill_brewer(name="Population", palette="OrRd", drop=FALSE)
 ```
 
 Contrast with population by zipcode

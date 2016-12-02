@@ -29,6 +29,8 @@ ui <- fluidPage(
     actionButton(inputId = "button",
                  label = "Submit"),
     
-    plotOutput(outputId = "plot", click = "plot_click")
+    plotOutput(outputId = "plot", click = "plot_click"),
+    
+    verbatimTextOutput("info")
 
 )

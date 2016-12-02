@@ -1,0 +1,25 @@
+{
+    "contents" : "",
+    "created" : 1480716121717.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "3A9A7580",
+    "lastKnownWriteTime" : 4614514944,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "rad7zmgnmb",
+        "caption" : "request_data",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=request_data&cache_key=rad7zmgnmb",
+        "displayedObservations" : 1080218,
+        "environment" : "",
+        "object" : "request_data",
+        "totalObservations" : 1080218,
+        "variables" : 37
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "type" : "r_dataframe"
+}

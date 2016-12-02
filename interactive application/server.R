@@ -28,8 +28,10 @@ server <- function(input, output) {
     output$plot <- renderPlot(zip_plot_customized(
         request_data, rv$type, rv$time_start, rv$time_end))
     
-    output$click_info <- renderPrint({
-        cat("input$plot_click:\n")
-        str(input$plot_click)
+    output$info <- renderPrint({
+        cat("Longitude: ", input$plot_click$x)
+        cat("\n")
+        cat("Lattidude: ",input$plot_click$y)
+        cat(input$plot_click$group)
     })
 }

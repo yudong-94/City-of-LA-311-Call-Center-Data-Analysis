@@ -49,7 +49,8 @@ zip_plot_customized = function(data, type, time_start, time_end) {
     zip_choropleth(requests_zip_filtered, 
                    zip_zoom = zip_vec, 
                    title="Requests number by zipcode",
-                   legend="Requests numbers")
+                   legend="Requests numbers") +
+        scale_fill_brewer(name="Population", palette="OrRd", drop=FALSE)
 }
 
 # zip_plot_customized(request_data, "Bulky Items", "2015-12-01", "2016-03-01")
