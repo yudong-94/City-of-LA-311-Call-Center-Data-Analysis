@@ -14,25 +14,36 @@ request_types = c("Bulky Items", "Dead Animal Removal", "Graffiti Removal",
                  "Multiple Streetlight Issue", "Feedback", "Report Water Waste")
 
 ui <- fluidPage(
-    dateRangeInput("daterange", "Time Period:",
-                   start  = "2015-08-01",
-                   end    = "2016-11-30",
-                   min    = "2015-08-01",
-                   max    = "2016-11-30",
-                   format = "mm/dd/yy",
-                   separator = " - "),
     
-    selectInput(inputId = "types", 
-                label = "Request Types", 
-                choices = request_types, multiple = TRUE, selectize = TRUE),
+    titlePanel("City of LA Requesting Data Analysis"),
     
-    actionButton(inputId = "button",
-                 label = "Submit"),
+    hr(),
     
-    plotOutput(outputId = "plot", click = "plot_click"),
-    
-    dataTableOutput(outputId = "top_zip")
-    
-    # verbatimTextOutput("info")
+    fluidRow(
+        column(3, 
+            dateRangeInput("daterange", "Time Period:",
+                           start  = "2015-08-01",
+                           end    = "2016-11-30",
+                           min    = "2015-08-01",
+                           max    = "2016-11-30",
+                           format = "mm/dd/yy",
+                           separator = " - "),
 
+            selectInput(inputId = "types", 
+                        label = "Request Types", 
+                        choices = request_types, multiple = TRUE, selectize = TRUE),
+            
+            actionButton(inputId = "button",
+                         label = "Submit")),
+        
+        column(8, 
+        plotOutput(outputId = "plot", click = "plot_click")),
+        
+        hr(),
+
+        dataTableOutput(outputId = "top_zip")
+        
+        
+        # verbatimTextOutput("info")
+    )
 )
