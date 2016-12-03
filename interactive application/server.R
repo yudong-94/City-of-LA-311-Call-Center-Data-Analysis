@@ -29,12 +29,18 @@ server <- function(input, output) {
     
     output$plot <- renderPlot(zip_plot_customized(
         request_data, rv$type, rv$time_start, rv$time_end))
+
+    output$top_zip <- renderDataTable(
+        top_zip_list(request_data, rv$type, rv$time_start, rv$time_end),
+        option = list(pageLength = 10)
+    )
+        
+#     output$info <- renderPrint({
+#         cat("Longitude: ", input$plot_click$x)
+#         cat("\n")
+#         cat("Lattidude: ", input$plot_click$y)
+#         cat("\n")
+#         paste0("ZipCode: ", location_to_zip(input$plot_click$x, input$plot_click$y))
+#                 })
     
-    output$info <- renderPrint({
-        cat("Longitude: ", input$plot_click$x)
-        cat("\n")
-        cat("Lattidude: ", input$plot_click$y)
-        cat("\n")
-        #paste0("ZipCode: ", location_to_zip(input$plot_click$x, input$plot_click$y))
-    })
 }

@@ -31,6 +31,8 @@ ui <- fluidPage(
     
     plotOutput(outputId = "plot", click = "plot_click"),
     
-    verbatimTextOutput("info")
+    dataTableOutput(outputId = "top_zip")
+    
+    # verbatimTextOutput("info")
 
 )

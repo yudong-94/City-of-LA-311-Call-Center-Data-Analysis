@@ -56,6 +56,23 @@ zip_plot_customized = function(data, type, time_start, time_end) {
 
 # zip_plot_customized(request_data, "Bulky Items", "2015-12-01", "2016-03-01")
 
+top_zip_list <- function(data, type, time_start, time_end) {
+    requests_zip_filtered = data %>%
+        filter(RequestType %in% type,
+               time_start < CreatedDate, 
+               time_end > CreatedDate) %>%
+        group_by(ZipCode) %>%
+        filter(!ZipCode %in% c("0", "", "9008")) %>%
+        summarise(requests = n()) %>%
+        arrange(-requests)
+    
+    colnames(requests_zip_filtered) = c("Zip Code", "Number of Requests") 
+    
+    return(as.data.frame(requests_zip_filtered))
+}
+
+# top_zip_list(request_data, "Bulky Items", "2015-12-01", "2016-03-01")
+
 # # a inaccurate way to get the zip from Lon and Lat
 # location_to_zip <- function(Lon, Lat) {
 #     if (is.numeric(Lon)) {
