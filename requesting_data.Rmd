@@ -41,7 +41,7 @@ request_data$ZipCode = str_replace_all(request_data$ZipCode, "[a-zA-Z ,]*", "")
 
 Calculate new variables:  
 1. extract the month, weekday and hour the request created  
-2. create the response period in hours as the time from created date to closed date
+2. create the response period/ update duration
 
 ```{r new variables}
 # extract the month, weekday and hour of CreatedDate
@@ -54,6 +54,11 @@ request_data$response_period = round((request_data$ClosedDate - request_data$Cre
 
 # special attention: the percentage of requests without a ClosedDate: 0.546
 nrow(filter(request_data, is.na(ClosedDate)))/ nrow(request_data)
+
+# caulculate update duration (UpdatedDate - CreatedDate)
+request_data$duration = round((request_data$UpdatedDate-request_data$CreatedDate)/(60*60),2)
+request_data = mutate(request_data, update_duration = ifelse(duration <= 0, 0, duration))
+request_data$duration = NULL
 ```
 
 # Trial run for sampled data
@@ -181,6 +186,36 @@ population_zip %>%
 ```
 
 The requests are more concentrated in certain areas, and there are some differences between the lists of most frequent zipcodes
+
+Analysis by CD
+
+```{r CD}
+CD_stat = read.csv("CD summary statisitcs.csv")
+
+# calculate total requests number and average update duration
+CD_stat2 = request_data %>%
+    filter(!is.na(CD)) %>%
+    group_by(CD) %>%
+    summarise(count = n(), 
+              avg_duration = round(mean(update_duration),2))
+
+CD_summary = merge(CD_stat, CD_stat2, by.x = "CD", by.y = "CD")
+CD_summary$CD = as.numeric(CD_summary$CD)
+
+CD_summary$request_pop = round(CD_summary$count / CD_summary$Population.000s., 2)
+colnames(CD_summary) = c("CD", "Population", "Median_age", "Median_hs_income",
+                         "unemployment_rate", "top_occp1", "top_occp2", 
+                         "top_occp3", "Requests_count", "avg_duration", 
+                         "Requests_by_pop")
+
+ggplot(CD_summary, aes(x = unemployment_rate, y = Requests_by_pop)) +
+    geom_point()
+
+ggplot(CD_summary, aes(x = Median_hs_income, y = Requests_by_pop)) +
+    geom_point()
+
+```
+
 
 
 ## Analysis on request sources and types

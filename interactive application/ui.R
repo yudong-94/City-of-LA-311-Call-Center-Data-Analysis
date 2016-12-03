@@ -33,17 +33,20 @@ ui <- fluidPage(
                         label = "Request Types", 
                         choices = request_types, multiple = TRUE, selectize = TRUE),
             
-            actionButton(inputId = "button",
+            actionButton(inputId = "button_geo",
                          label = "Submit")),
         
         column(8, 
         plotOutput(outputId = "plot", click = "plot_click")),
         
         hr(),
+        
+        textInput(inputId = "CD", label = "Input CD"),
+        
+        actionButton(inputId = "button_cd",
+                     label = "Submit")),
+        
+        verbatimTextOutput("info")
 
-        dataTableOutput(outputId = "top_zip")
-        
-        
-        # verbatimTextOutput("info")
-    )
+        # dataTableOutput(outputId = "top_zip")
 )

@@ -2,7 +2,10 @@ library(choroplethrZip)
 library(dplyr)
 library(ggmap)
 
- load("all_data_for_shiny.RData")
+# load("all_data_for_shiny.RData")
+
+
+################## spark #####################
 
 # # using spark  (cmd+shift+c to uncomment the whole paragraph)
 # 
@@ -35,6 +38,9 @@ library(ggmap)
 # # zip_plot_customized_spark(requests_data, "Bulky Items")
 
 
+
+################## zip_plot_customized #####################
+
 zip_plot_customized = function(data, type, time_start, time_end) {
     requests_zip_filtered = data %>%
         filter(RequestType %in% type,
@@ -56,6 +62,9 @@ zip_plot_customized = function(data, type, time_start, time_end) {
 
 # zip_plot_customized(request_data, "Bulky Items", "2015-12-01", "2016-03-01")
 
+
+################## top_zip_list #####################
+
 top_zip_list <- function(data, type, time_start, time_end) {
     requests_zip_filtered = data %>%
         filter(RequestType %in% type,
@@ -73,7 +82,22 @@ top_zip_list <- function(data, type, time_start, time_end) {
 
 # top_zip_list(request_data, "Bulky Items", "2015-12-01", "2016-03-01")
 
-# # a inaccurate way to get the zip from Lon and Lat
+
+
+################## cd_top_requests #####################
+cd_top_requests <- function(data, cd) {
+    summary = data %>%
+        filter(CD == cd) %>%
+        group_by(RequestType) %>%
+        summarise(count = n()) %>%
+        arrange(-count) %>%
+        top_n(3)
+}
+
+
+################## location_to_zip #####################
+
+# # an inaccurate way to get the zip from Lon and Lat
 # location_to_zip <- function(Lon, Lat) {
 #     if (is.numeric(Lon)) {
 #         res = revgeocode(as.numeric(c(Lon, Lat)), output = "more")

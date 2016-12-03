@@ -18,29 +18,37 @@ server <- function(input, output) {
     
     rv = reactiveValues(type = request_types, 
                         time_start = "2015-08-01", 
-                        time_end = "2016-11-30")
+                        time_end = "2016-11-30",
+                        cd = "1")
     
     # if we click the buttom
-    observeEvent(input$button, {
+    observeEvent(input$button_geo, {
         rv$type = input$types
         rv$time_start = as.POSIXct(input$daterange[1])
         rv$time_end = as.POSIXct(input$daterange[2])
     }) 
-    
-    output$plot <- renderPlot(zip_plot_customized(
-        request_data, rv$type, rv$time_start, rv$time_end))
 
-    output$top_zip <- renderDataTable(
-        top_zip_list(request_data, rv$type, rv$time_start, rv$time_end),
-        option = list(pageLength = 10)
-    )
+    observeEvent(input$button_cd, {
+        rv$cd = as.character(input$CD)
+    }) 
         
-#     output$info <- renderPrint({
-#         cat("Longitude: ", input$plot_click$x)
-#         cat("\n")
-#         cat("Lattidude: ", input$plot_click$y)
-#         cat("\n")
-#         paste0("ZipCode: ", location_to_zip(input$plot_click$x, input$plot_click$y))
-#                 })
+    output$plot <- renderPlot(zip_plot_customized(
+        request_data, rv$type, rv$time_start, rv$time_end), height = 300, width = 400)
+
+#     output$top_zip <- renderDataTable(
+#         top_zip_list(request_data, rv$type, rv$time_start, rv$time_end),
+#         option = list(pageLength = 10)
+#     )
+        
+      output$info <- renderPrint({
+#          cat("Longitude: ", input$plot_click$x)
+#          cat("\n")
+#          cat("Lattidude: ", input$plot_click$y)
+#          cat("\n")
+#          paste0("ZipCode: ", location_to_zip(input$plot_click$x, input$plot_click$y))
+          print(filter(CD_summary, CD == rv$cd))
+          cat("\n")
+          print(cd_top_requests(request_data, cd = rv$cd))
+                  })
     
 }
