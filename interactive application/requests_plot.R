@@ -1,5 +1,6 @@
 library(choroplethrZip)
 library(dplyr)
+library(ggmap)
 
  load("all_data_for_shiny.RData")
 
@@ -50,8 +51,15 @@ zip_plot_customized = function(data, type, time_start, time_end) {
                    zip_zoom = zip_vec, 
                    title="Requests number by zipcode",
                    legend="Requests numbers") +
-        scale_fill_brewer(name="Population", palette="OrRd", drop=FALSE)
+        scale_fill_brewer(name="Requests", palette="OrRd", drop=FALSE)
 }
 
 # zip_plot_customized(request_data, "Bulky Items", "2015-12-01", "2016-03-01")
 
+# # a inaccurate way to get the zip from Lon and Lat
+# location_to_zip <- function(Lon, Lat) {
+#     if (is.numeric(Lon)) {
+#         res = revgeocode(as.numeric(c(Lon, Lat)), output = "more")
+#         res$postal_code
+#     }
+# }

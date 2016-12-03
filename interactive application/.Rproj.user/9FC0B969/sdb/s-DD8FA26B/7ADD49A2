@@ -1,12 +1,12 @@
 {
-    "contents" : "\n# This is the server logic for a Shiny web application.\n# You can find out more about building applications with Shiny here:\n#\n# http://shiny.rstudio.com\n#\n\nlibrary(shiny)\nsource(\"requests_plot.R\")\n\nrequest_types = c(\"Bulky Items\", \"Dead Animal Removal\", \"Graffiti Removal\",\n                  \"Electronic Waste\", \"Illegal Dumping Pickup\", \"Other\",\n                  \"Metal/Household Appliances\", \"Homeless Encampment\",\n                  \"Single Streetlight Issue\", \n                  \"Multiple Streetlight Issue\", \"Feedback\", \"Report Water Waste\")\n\nserver <- function(input, output) {\n    \n    rv = reactiveValues(type = request_types, time_start = \"2015-08-01\", time_end = \"2016-11-30\")\n    \n    # if we click the buttom\n    observeEvent(input$button, {\n        rv$type = input$types\n        rv$time_start = as.POSIXct(input$daterange[1])\n        rv$time_end = as.POSIXct(input$daterange[2])\n    }) \n    \n    output$plot <- renderPlot(zip_plot_customized(\n        request_data, rv$type, rv$time_start, rv$time_end))\n    \n    output$info <- renderPrint({\n        cat(\"Longitude: \", input$plot_click$x)\n        cat(\"\\n\")\n        cat(\"Lattidude: \",input$plot_click$y)\n        cat(input$plot_click$group)\n    })\n}",
+    "contents" : "\n# This is the server logic for a Shiny web application.\n# You can find out more about building applications with Shiny here:\n#\n# http://shiny.rstudio.com\n#\n\nlibrary(shiny)\nsource(\"requests_plot.R\")\n\nrequest_types = c(\"Bulky Items\", \"Dead Animal Removal\", \"Graffiti Removal\",\n                  \"Electronic Waste\", \"Illegal Dumping Pickup\", \"Other\",\n                  \"Metal/Household Appliances\", \"Homeless Encampment\",\n                  \"Single Streetlight Issue\", \n                  \"Multiple Streetlight Issue\", \"Feedback\", \"Report Water Waste\")\n\nserver <- function(input, output) {\n    \n    rv = reactiveValues(type = request_types, \n                        time_start = \"2015-08-01\", \n                        time_end = \"2016-11-30\")\n    \n    # if we click the buttom\n    observeEvent(input$button, {\n        rv$type = input$types\n        rv$time_start = as.POSIXct(input$daterange[1])\n        rv$time_end = as.POSIXct(input$daterange[2])\n    }) \n    \n    output$plot <- renderPlot(zip_plot_customized(\n        request_data, rv$type, rv$time_start, rv$time_end))\n    \n    output$info <- renderPrint({\n        cat(\"Longitude: \", input$plot_click$x)\n        cat(\"\\n\")\n        cat(\"Lattidude: \", input$plot_click$y)\n        cat(\"\\n\")\n        #paste0(\"ZipCode: \", location_to_zip(input$plot_click$x, input$plot_click$y))\n    })\n}",
     "created" : 1480627983939.000,
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "4222340524",
+    "hash" : "859936414",
     "id" : "7ADD49A2",
-    "lastKnownWriteTime" : 1480719377,
+    "lastKnownWriteTime" : 1480725185,
     "path" : "~/Desktop/DSO545/Final project/fight-on/interactive application/server.R",
     "project_path" : "server.R",
     "properties" : {

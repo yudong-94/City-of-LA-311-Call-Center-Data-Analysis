@@ -16,7 +16,9 @@ request_types = c("Bulky Items", "Dead Animal Removal", "Graffiti Removal",
 
 server <- function(input, output) {
     
-    rv = reactiveValues(type = request_types, time_start = "2015-08-01", time_end = "2016-11-30")
+    rv = reactiveValues(type = request_types, 
+                        time_start = "2015-08-01", 
+                        time_end = "2016-11-30")
     
     # if we click the buttom
     observeEvent(input$button, {
@@ -31,7 +33,8 @@ server <- function(input, output) {
     output$info <- renderPrint({
         cat("Longitude: ", input$plot_click$x)
         cat("\n")
-        cat("Lattidude: ",input$plot_click$y)
-        cat(input$plot_click$group)
+        cat("Lattidude: ", input$plot_click$y)
+        cat("\n")
+        #paste0("ZipCode: ", location_to_zip(input$plot_click$x, input$plot_click$y))
     })
 }
