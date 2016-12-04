@@ -19,7 +19,7 @@ server <- function(input, output) {
     rv = reactiveValues(type = request_types, 
                         time_start = "2015-08-01", 
                         time_end = "2016-11-30",
-                        cd = "1")
+                        cd = "city of LA")
     
     # if we click the buttom
     observeEvent(input$button_geo, {
@@ -29,7 +29,7 @@ server <- function(input, output) {
     }) 
 
     observeEvent(input$button_cd, {
-        rv$cd = as.character(input$CD)
+        rv$cd = input$CD
     }) 
         
     output$plot <- renderPlot(zip_plot_customized(
@@ -40,15 +40,18 @@ server <- function(input, output) {
 #         option = list(pageLength = 10)
 #     )
         
-      output$info <- renderPrint({
-#          cat("Longitude: ", input$plot_click$x)
-#          cat("\n")
-#          cat("Lattidude: ", input$plot_click$y)
-#          cat("\n")
-#          paste0("ZipCode: ", location_to_zip(input$plot_click$x, input$plot_click$y))
-          print(filter(CD_summary, CD == rv$cd))
-          cat("\n")
-          print(cd_top_requests(request_data, cd = rv$cd))
-                  })
+#       output$info <- renderPrint({
+#           cat("Longitude: ", input$plot_click$x)
+#           cat("\n")
+#           cat("Lattidude: ", input$plot_click$y)
+#           cat("\n")
+#           paste0("ZipCode: ", location_to_zip(input$plot_click$x, input$plot_click$y))
+#                   })
+      
+      output$table1 <- renderTable(cd_key_stats(CD_summary, cd = rv$cd), 
+                                  align = "c", rownames = TRUE, colnames = FALSE)
+      
+      output$table2 <- renderTable(cd_top_requests(request_data, cd = rv$cd), 
+                                   align = "c", rownames = TRUE, colnames = TRUE)
     
 }

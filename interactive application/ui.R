@@ -13,40 +13,58 @@ request_types = c("Bulky Items", "Dead Animal Removal", "Graffiti Removal",
                   "Single Streetlight Issue", 
                  "Multiple Streetlight Issue", "Feedback", "Report Water Waste")
 
+CD_lists = c(as.character(1:15), "city of LA")
+
 ui <- fluidPage(
     
     titlePanel("City of LA Requesting Data Analysis"),
     
     hr(),
     
-    fluidRow(
-        column(3, 
-            dateRangeInput("daterange", "Time Period:",
-                           start  = "2015-08-01",
-                           end    = "2016-11-30",
-                           min    = "2015-08-01",
-                           max    = "2016-11-30",
-                           format = "mm/dd/yy",
-                           separator = " - "),
-
-            selectInput(inputId = "types", 
-                        label = "Request Types", 
-                        choices = request_types, multiple = TRUE, selectize = TRUE),
+    sidebarLayout(
+        sidebarPanel(
+                dateRangeInput("daterange", "Time Period: ",
+                                start  = "2015-08-01",
+                                end    = "2016-11-30",
+                                min    = "2015-08-01",
+                                max    = "2016-11-30",
+                                format = "mm/dd/yy",
+                                separator = " - "),
             
-            actionButton(inputId = "button_geo",
-                         label = "Submit")),
+                selectInput(inputId = "types", 
+                            label = "Request Types: ", 
+                            choices = request_types, 
+                            multiple = TRUE, selectize = TRUE),
+                        
+                actionButton(inputId = "button_geo",
+                            label = "Submit"),
+                
+                width = 4),
         
-        column(8, 
-        plotOutput(outputId = "plot", click = "plot_click")),
+            mainPanel(
+                plotOutput(outputId = "plot", click = "plot_click"))),
         
-        hr(),
+    hr(),
+    
+    sidebarLayout(
+        sidebarPanel(
+            selectInput(inputId = "CD", 
+                        label = "Council Districts: ", 
+                        choices = CD_lists, 
+                        multiple = TRUE, selectize = TRUE,
+                        selected = "city of LA"),
         
-        textInput(inputId = "CD", label = "Input CD"),
+            actionButton(inputId = "button_cd",
+                        label = "Submit",
+                        style='padding:3px'),
+            
+            width = 3),
         
-        actionButton(inputId = "button_cd",
-                     label = "Submit")),
-        
-        verbatimTextOutput("info")
-
-        # dataTableOutput(outputId = "top_zip")
+        mainPanel(
+            fluidRow(
+                column(8,
+                    tableOutput('table1')),
+                column(4,
+                    tableOutput('table2')))))
+    
 )

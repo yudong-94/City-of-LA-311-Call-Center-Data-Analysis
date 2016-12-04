@@ -199,16 +199,18 @@ CD_stat2 = request_data %>%
     summarise(count = n(), 
               avg_duration = round(mean(update_duration),2))
 
-CD_summary = merge(CD_stat, CD_stat2, by.x = "CD", by.y = "CD")
-CD_summary$CD = as.numeric(CD_summary$CD)
+CD_summary = merge(CD_stat, CD_stat2, by.x = "CD", by.y = "CD", all.x = TRUE)
+CD_summary$count[16] = nrow(request_data)
+CD_summary$avg_duration[16] = round(mean(request_data$update_duration),2)
 
 CD_summary$request_pop = round(CD_summary$count / CD_summary$Population.000s., 2)
-colnames(CD_summary) = c("CD", "Population", "Median_age", "Median_hs_income",
-                         "unemployment_rate", "top_occp1", "top_occp2", 
-                         "top_occp3", "Requests_count", "avg_duration", 
-                         "Requests_by_pop")
+colnames(CD_summary) = c("Council District", "Population(000s)", "Median Age", 
+                         "Median Household Income($000s)", "Unemployment Rate", 
+                         "Top1 Occupation", "Top2 Occupation", 
+                         "Top3 Occupation", "Requests Counts", 
+                         "Average Update Duration", "Requests per 1000 Residents")
 
-ggplot(CD_summary, aes(x = unemployment_rate, y = Requests_by_pop)) +
+ggplot(CD_summary, aes(x = `Unemployment Rate`, y = `Requests per 1000 Residents`)) +
     geom_point()
 
 ggplot(CD_summary, aes(x = Median_hs_income, y = Requests_by_pop)) +

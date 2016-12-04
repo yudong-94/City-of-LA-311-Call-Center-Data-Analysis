@@ -1,6 +1,5 @@
 library(choroplethrZip)
 library(dplyr)
-library(ggmap)
 
 # load("all_data_for_shiny.RData")
 
@@ -87,15 +86,25 @@ top_zip_list <- function(data, type, time_start, time_end) {
 ################## cd_top_requests #####################
 cd_top_requests <- function(data, cd) {
     summary = data %>%
-        filter(CD == cd) %>%
+        filter(CD %in% cd) %>%
         group_by(RequestType) %>%
         summarise(count = n()) %>%
         arrange(-count) %>%
         top_n(3)
+    colnames(summary) = c("Top Requests Type", "Requests counts")
+    summary
+}
+
+
+################## cd_key_stats #####################
+cd_key_stats <- function(data, cd) {
+    stats = t(filter(data, `Council District` %in% cd))
+    stats
 }
 
 
 ################## location_to_zip #####################
+# library(ggmap)
 
 # # an inaccurate way to get the zip from Lon and Lat
 # location_to_zip <- function(Lon, Lat) {
