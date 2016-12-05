@@ -1,12 +1,12 @@
 {
-    "contents" : "\n# This is the server logic for a Shiny web application.\n# You can find out more about building applications with Shiny here:\n#\n# http://shiny.rstudio.com\n#\n\nlibrary(shiny)\nsource(\"cd_summary_support.R\")\n\nrequest_types = c(\"Bulky Items\", \"Dead Animal Removal\", \"Graffiti Removal\",\n                  \"Electronic Waste\", \"Illegal Dumping Pickup\", \"Other\",\n                  \"Metal/Household Appliances\", \"Homeless Encampment\",\n                  \"Single Streetlight Issue\", \n                  \"Multiple Streetlight Issue\", \"Feedback\", \"Report Water Waste\")\n\nserver <- function(input, output) {\n    \n    rv = reactiveValues(cd = c(\"city of LA\"))\n    \n    # if we click the buttom\n    observeEvent(input$button_cd, {\n        rv$cd = input$CD\n    }) \n\n    \n    output$table1 <- renderTable(cd_key_stats(CD_summary, cd = rv$cd), \n                                 align = \"c\", rownames = TRUE, colnames = TRUE)\n    \n    output$table2 <- renderTable(cd_top_requests(request_data, cd = rv$cd), \n                                 align = \"c\", rownames = TRUE, colnames = TRUE)\n    \n}",
+    "contents" : "\n# This is the server logic for a Shiny web application.\n# You can find out more about building applications with Shiny here:\n#\n# http://shiny.rstudio.com\n#\n\nlibrary(shiny)\nlibrary(ggplot2)\nsource(\"cd_summary_support.R\")\n\nrequest_types = c(\"Bulky Items\", \"Dead Animal Removal\", \"Graffiti Removal\",\n                  \"Electronic Waste\", \"Illegal Dumping Pickup\", \"Other\",\n                  \"Metal/Household Appliances\", \"Homeless Encampment\",\n                  \"Single Streetlight Issue\", \n                  \"Multiple Streetlight Issue\", \"Feedback\", \"Report Water Waste\")\n\nserver <- function(input, output) {\n    \n    rv = reactiveValues(cd = c(\"city of LA\"))\n    \n    # if we click the buttom\n    observeEvent(input$button_cd, {\n        rv$cd = input$CD\n    }) \n    \n     output$plot_income <- renderPlotly(\n         ggplotly(income_plot(rv$cd))\n     )\n    \n    output$plot_unemployment <- renderPlotly(\n        ggplotly(employment_plot(rv$cd))\n    )\n    \n    output$table1 <- renderTable(cd_key_stats(CD_summary, cd = rv$cd), \n                                 align = \"c\", rownames = TRUE, colnames = TRUE)\n    \n#     output$table2 <- renderTable(cd_top_requests(request_data, cd = rv$cd), \n#                                  align = \"c\", rownames = TRUE, colnames = TRUE)\n    \n}",
     "created" : 1480897759278.000,
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "56444496",
+    "hash" : "1756733788",
     "id" : "1045E149",
-    "lastKnownWriteTime" : 1480897925,
+    "lastKnownWriteTime" : 1480911089,
     "path" : "~/Desktop/DSO545/Final project/fight-on/Shiny_cd_summary/server.R",
     "project_path" : "server.R",
     "properties" : {

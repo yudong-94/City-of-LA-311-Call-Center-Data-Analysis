@@ -6,6 +6,7 @@
 #
 
 library(shiny)
+library(ggplot2)
 source("cd_summary_support.R")
 
 request_types = c("Bulky Items", "Dead Animal Removal", "Graffiti Removal",
@@ -22,12 +23,19 @@ server <- function(input, output) {
     observeEvent(input$button_cd, {
         rv$cd = input$CD
     }) 
-
+    
+     output$plot_income <- renderPlotly(
+         ggplotly(income_plot(rv$cd))
+     )
+    
+    output$plot_unemployment <- renderPlotly(
+        ggplotly(employment_plot(rv$cd))
+    )
     
     output$table1 <- renderTable(cd_key_stats(CD_summary, cd = rv$cd), 
                                  align = "c", rownames = TRUE, colnames = TRUE)
     
-    output$table2 <- renderTable(cd_top_requests(request_data, cd = rv$cd), 
-                                 align = "c", rownames = TRUE, colnames = TRUE)
+#     output$table2 <- renderTable(cd_top_requests(request_data, cd = rv$cd), 
+#                                  align = "c", rownames = TRUE, colnames = TRUE)
     
 }

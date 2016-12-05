@@ -5,6 +5,7 @@
 # http://shiny.rstudio.com
 
 library(shiny)
+library()
 
 request_types = c("Bulky Items", "Dead Animal Removal", "Graffiti Removal",
                   "Electronic Waste", "Illegal Dumping Pickup", "Other",
@@ -22,6 +23,7 @@ ui <- navbarPage(
     
     tabPanel("Council Districts Analysis",
              
+             
              sidebarLayout(
                  sidebarPanel(
                      selectInput(inputId = "CD", 
@@ -38,9 +40,20 @@ ui <- navbarPage(
                  
                  mainPanel(
                      fluidRow(
-                         tableOutput('table1')),
-                     hr(),
-                     tableOutput('table2')))
-    )
+                         tableOutput('table1'))
+#                      hr(),
+#                      tableOutput('table2'))
+            )
+        )
+    ),
+
+    hr(),
+
+    fluidRow(
+        column(6,
+               plotlyOutput(outputId = "plot_income")),
+        column(6,
+               plotlyOutput(outputId = "plot_unemployment")))
+
     
 )
