@@ -1,0 +1,25 @@
+{
+    "contents" : "",
+    "created" : 1480976578478.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "60F7EFC7",
+    "lastKnownWriteTime" : 1480976414,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "nj54qezi6l",
+        "caption" : "zip_merged",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=zip_merged&cache_key=nj54qezi6l",
+        "displayedObservations" : 684,
+        "environment" : "",
+        "object" : "zip_merged",
+        "totalObservations" : 684,
+        "variables" : 20
+    },
+    "relative_order" : 8,
+    "source_on_save" : false,
+    "type" : "r_dataframe"
+}

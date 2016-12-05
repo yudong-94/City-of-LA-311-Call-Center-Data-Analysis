@@ -305,3 +305,74 @@ The older the average age, the higher the proportion of Metal/Household Applianc
 The higher the unemployment rate, the higher the proportion of Illegal Dumping Pick requests.
 
 Income/unemployment rate/age has no correlation with the proportion of Electronic Waste, Dead Animal Removal requests, and Homeless Encampment requests.
+
+Unemployment Rate:  
+positive: Illegal Dumping Pick 0.61, Graffiti Removal 0.51
+negative: Feedback -0.57, Single Streetlight Issue -0.73, Metal/Household Appliances -0.66, Multiple Streetlight Issue -0.65, Report Water Waste -0.61
+
+Median Household Income:
+positive: Bulky Items 0.63, Metal/Household Appliances 0.86, Feedback 0.53, Single Streetlight Issue 0.57, Multiple Streetlight Issue 0.54
+negative: Graffiti Removal -0.72
+
+Median Age:
+positive: Bulky Items 0.60, Metal/Household Appliances 0.69, Feedback 0.77 
+negative: Graffiti Removal -0.62
+
+
+Requests type frequency and zipcode characteristics
+
+```{r req&zip}
+zip = request_data %>%
+    group_by(ZipCode, RequestType) %>%
+    summarise(count = n()) %>%
+    group_by(ZipCode) %>%
+    mutate(req_prop = round(100 * count / sum(count),1))
+zip = filter(zip, !is.na(ZipCode), ZipCode != "", ZipCode != "0")
+
+zip_merged = merge(zip, zip_summary, by.x = "ZipCode", by.y = "Zip.Code")
+zip_merged = select(zip_merged, ZipCode, RequestType, count, req_prop, Median.Age, Unemployment.rate, Median.Income)
+
+cor(filter(zip_merged, RequestType == "Bulky Items")[,c(4:7)])
+# Unemployment and bulky items, -0.53
+
+#cor(filter(zip_merged, RequestType == "Dead Animal Removal")[,c(4:7)])
+
+cor(filter(zip_merged, RequestType == "Graffiti Removal")[,c(4:7)])
+# unemployment and graffiti removal 0.55, median income and graffiti removal 0.63
+
+cor(filter(zip_merged, RequestType == "Homeless Encampment")[,c(4:7)])
+# unemployment and homeless encapment 0.62
+
+cor(filter(zip_merged, RequestType == "Metal/Household Appliances")[,c(4:7)])
+# median income and Metal/Household Appliances 0.78, unemployment and Metal/Household Appliances -0.57
+
+# cor(filter(zip_merged, RequestType == "Illegal Dumping Pickup")[,c(4:7)])
+
+cor(filter(zip_merged, RequestType == "Electronic Waste")[,c(4:7)])
+# unemployment and electronic waste -0.55, median income and Electronic Waste 0.55
+
+cor(filter(zip_merged, RequestType == "Report Water Waste")[,c(4:7)])
+# median age and Report Water Waste 0.57
+
+cor(filter(zip_merged, RequestType == "Single Streetlight Issue")[,c(4:7)])
+# median age and Single Streetlight Issue 0.68
+
+cor(filter(zip_merged, RequestType == "Multiple Streetlight Issue")[,c(4:7)])
+# median age and Multiple Streetlight Issue 0.68
+
+cor(filter(zip_merged, RequestType == "Feedback")[,c(4:7)])
+# meidian age and Feedback 0.51
+
+```
+
+Unemployment:  
+positive: **graffiti removal 0.55**, homeless encapment 0.62  
+negative: bulky items -0.53, electronic waste -0.55, **Metal/Household Appliances** -0.57
+
+Median Household income:  
+positive: Electronic Waste 0.55, **Metal/Household Appliances** 0.78
+negative: **graffiti removal** -0.63
+
+Median age:  
+positive: Report Water Waste 0.57, Single Streetlight Issue 0.68, Multiple Streetlight Issue 0.68, **Feedback** 0.51
+negative: /
