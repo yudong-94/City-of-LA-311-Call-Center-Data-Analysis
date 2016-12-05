@@ -1,0 +1,18 @@
+{
+    "contents" : "library(dplyr)\nlibrary(plotly)\nlibrary(wordcloud)\n\n################## cd_top_requests #####################\n# cd_top_requests <- function(data, cd) {\n#     summary = data %>%\n#         filter(CD %in% cd) %>%\n#         group_by(RequestType) %>%\n#         summarise(count = n()) %>%\n#         arrange(-count) %>%\n#         top_n(3)\n#     colnames(summary) = c(\"Top Requests Type\", \"Requests counts\")\n#     summary\n# }\n\n\n################## cd_key_stats #####################\ncd_key_stats <- function(data, cd) {\n    stats = t(filter(data, `Council District` %in% cd))\n    cd_names = stats[1,]\n    stats = as.data.frame(stats[2:nrow(stats),])\n    colnames(stats) = cd_names\n    stats\n}\n\n\n################## income_plots #####################\nincome_plot <- function(cd) {\n    selected = as.data.frame(filter(CD_summary, \n                                    `Council District` %in% cd, \n                                    `Council District` != \"city of LA\"))\n    ggplot(CD_summary[1:15,], aes(x = `Median Household Income($000s)`,\n                           y = `Requests per 1000 Residents`)) +\n        geom_point(aes(text = paste(\"Council District: \", `Council District`))) +\n        geom_smooth(method = \"lm\") +\n        ylim(0, 500) +\n        geom_point(data = selected,\n                   aes(x = `Median Household Income($000s)`,\n                       y = `Requests per 1000 Residents`),\n                   size = 5, color = \"red\") +\n        ggtitle(\"Requests v.s. Income\", \n                subtitle = \"Correlation: -0.92\") +\n        theme(plot.title = element_text(hjust = 0.5)) \n}\n\n\n################## employment_plots #####################\nemployment_plot <- function(cd) {\n    selected = as.data.frame(filter(CD_summary, \n                                    `Council District` %in% cd, \n                                    `Council District` != \"city of LA\"))\n    ggplot(CD_summary[1:15,], aes(x = `Unemployment Rate`,\n                                  y = `Requests per 1000 Residents`)) +\n        geom_point(aes(text = paste(\"Council District: \", `Council District`))) +\n        geom_smooth(method = \"lm\") +\n        ylim(0, 500) +\n        geom_point(data = selected,\n                   aes(x = `Unemployment Rate`,\n                       y = `Requests per 1000 Residents`),\n                  size = 5, color = \"red\") +\n        ggtitle(\"Requests v.s. Unemployment Rate\", \n                subtitle = \"Correlation: 0.76\") +\n        theme(plot.title = element_text(hjust = 0.5)) \n}\n\n",
+    "created" : 1480897799292.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2125357467",
+    "id" : "9094F125",
+    "lastKnownWriteTime" : 1480925576,
+    "path" : "~/Desktop/DSO545/Final project/fight-on/Shiny_cd_summary/cd_summary_support.R",
+    "project_path" : "cd_summary_support.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "type" : "r_source"
+}

@@ -7,6 +7,7 @@
 
 library(shiny)
 library(ggplot2)
+library(plotly)
 source("cd_summary_support.R")
 
 request_types = c("Bulky Items", "Dead Animal Removal", "Graffiti Removal",
@@ -38,4 +39,11 @@ server <- function(input, output) {
 #     output$table2 <- renderTable(cd_top_requests(request_data, cd = rv$cd), 
 #                                  align = "c", rownames = TRUE, colnames = TRUE)
     
+    
+    output$wc <- renderPlot({
+        set.seed(140)
+        wordcloud(words = type_summary$RequestType, type_summary$count,
+                  colors = type_summary$colorlist, ordered.colors = TRUE,
+                  rot.per = 0.5)}
+    )
 }

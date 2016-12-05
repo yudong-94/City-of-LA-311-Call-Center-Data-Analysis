@@ -223,14 +223,25 @@ ggplot(CD_summary, aes(x = Median_hs_income, y = Requests_by_pop)) +
 
 ```{r wordcloud}
 library(wordcloud)
-library(dplyr)
 
-sample = sample_n(request_data, 10000)
+type_summary = request_data %>%
+    group_by(RequestType) %>%
+    summarise(avg_update = round(mean(update_duration),2), count = n())
 
-pal = brewer.pal(9, "YlOrBr")
-pal = pal[-c(1:4)]
+type_summary = type_summary %>%
+    mutate(overtime = ifelse(avg_update > mean(sample$update_duration), TRUE, FALSE))
 
-wordcloud(words = sample$RequestType, random.order = FALSE, colors = pal)
+type_summary = type_summary %>%
+    mutate(colorlist = ifelse(overtime == TRUE, "#bf812d", "#35978f"))
+
+# pal = brewer.pal(9, "BrBG")
+# pal = pal[c(4,4,5,5,6,6,7,7,8,8,9,9)]
+
+set.seed(140)
+wordcloud(words = type_summary$RequestType, type_summary$count, 
+          colors = type_summary$colorlist, ordered.colors = TRUE,
+          rot.per = 0.5)
+
 ```
 
 

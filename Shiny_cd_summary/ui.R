@@ -5,7 +5,7 @@
 # http://shiny.rstudio.com
 
 library(shiny)
-library()
+library(plotly)
 
 request_types = c("Bulky Items", "Dead Animal Removal", "Graffiti Removal",
                   "Electronic Waste", "Illegal Dumping Pickup", "Other",
@@ -44,16 +44,18 @@ ui <- navbarPage(
 #                      hr(),
 #                      tableOutput('table2'))
             )
-        )
-    ),
+        ),
 
-    hr(),
-
-    fluidRow(
-        column(6,
-               plotlyOutput(outputId = "plot_income")),
-        column(6,
-               plotlyOutput(outputId = "plot_unemployment")))
-
+        hr(),
     
+        fluidRow(
+            column(6,
+                   plotlyOutput(outputId = "plot_income")),
+            column(6,
+                   plotlyOutput(outputId = "plot_unemployment"))),
+    
+        hr(),
+    
+        plotOutput(outputId = "wc")
+    )
 )

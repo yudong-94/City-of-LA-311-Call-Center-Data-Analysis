@@ -1,4 +1,6 @@
 library(dplyr)
+library(plotly)
+library(wordcloud)
 
 ################## cd_top_requests #####################
 # cd_top_requests <- function(data, cd) {
@@ -61,3 +63,4 @@ employment_plot <- function(cd) {
                 subtitle = "Correlation: 0.76") +
         theme(plot.title = element_text(hjust = 0.5)) 
 }
+
