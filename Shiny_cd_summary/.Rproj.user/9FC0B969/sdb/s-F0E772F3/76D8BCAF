@@ -1,0 +1,17 @@
+{
+    "contents" : "\n# This is the user-interface definition of a Shiny web application.\n# You can find out more about building applications with Shiny here:\n#\n# http://shiny.rstudio.com\n\nlibrary(shiny)\n\nrequest_types = c(\"Bulky Items\", \"Dead Animal Removal\", \"Graffiti Removal\",\n                  \"Electronic Waste\", \"Illegal Dumping Pickup\", \"Other\",\n                  \"Metal/Household Appliances\", \"Homeless Encampment\",\n                  \"Single Streetlight Issue\", \n                  \"Multiple Streetlight Issue\", \"Feedback\", \"Report Water Waste\")\n\nCD_lists = c(as.character(1:15), \"city of LA\")\n\nui <- navbarPage(\n    \n    \"Requesting Analysis\",\n    \n    fluid = TRUE, \n    \n    tabPanel(\"Council Districts Analysis\",\n             \n             sidebarLayout(\n                 sidebarPanel(\n                     selectInput(inputId = \"CD\", \n                                 label = \"Council Districts: \", \n                                 choices = CD_lists, \n                                 multiple = TRUE, selectize = TRUE,\n                                 selected = \"city of LA\"),\n                     \n                     actionButton(inputId = \"button_cd\",\n                                  label = \"Submit\",\n                                  style='padding:3px'),\n                     \n                     width = 3),\n                 \n                 mainPanel(\n                     fluidRow(\n                         tableOutput('table1')),\n                     hr(),\n                     tableOutput('table2')))\n    )\n    \n)",
+    "created" : 1480897758800.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3132530701",
+    "id" : "76D8BCAF",
+    "lastKnownWriteTime" : 1480897910,
+    "path" : "~/Desktop/DSO545/Final project/fight-on/Shiny_cd_summary/ui.R",
+    "project_path" : "ui.R",
+    "properties" : {
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "type" : "r_source"
+}

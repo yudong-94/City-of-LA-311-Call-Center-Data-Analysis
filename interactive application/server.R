@@ -19,7 +19,7 @@ server <- function(input, output) {
     rv = reactiveValues(type = request_types, 
                         time_start = "2015-08-01", 
                         time_end = "2016-11-30",
-                        cd = "city of LA")
+                        cd = c("city of LA"))
     
     # if we click the buttom
     observeEvent(input$button_geo, {
@@ -33,7 +33,7 @@ server <- function(input, output) {
     }) 
         
     output$plot <- renderPlot(zip_plot_customized(
-        request_data, rv$type, rv$time_start, rv$time_end), height = 300, width = 400)
+        request_data, rv$type, rv$time_start, rv$time_end), height = 400, width = 500)
 
 #     output$top_zip <- renderDataTable(
 #         top_zip_list(request_data, rv$type, rv$time_start, rv$time_end),
@@ -49,7 +49,7 @@ server <- function(input, output) {
 #                   })
       
       output$table1 <- renderTable(cd_key_stats(CD_summary, cd = rv$cd), 
-                                  align = "c", rownames = TRUE, colnames = FALSE)
+                                  align = "c", rownames = TRUE, colnames = TRUE)
       
       output$table2 <- renderTable(cd_top_requests(request_data, cd = rv$cd), 
                                    align = "c", rownames = TRUE, colnames = TRUE)

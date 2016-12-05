@@ -208,7 +208,8 @@ colnames(CD_summary) = c("Council District", "Population(000s)", "Median Age",
                          "Median Household Income($000s)", "Unemployment Rate", 
                          "Top1 Occupation", "Top2 Occupation", 
                          "Top3 Occupation", "Requests Counts", 
-                         "Average Update Duration", "Requests per 1000 Residents")
+                         "Average Update Duration(min)", 
+                         "Requests per 1000 Residents")
 
 ggplot(CD_summary, aes(x = `Unemployment Rate`, y = `Requests per 1000 Residents`)) +
     geom_point()
@@ -218,8 +219,3 @@ ggplot(CD_summary, aes(x = Median_hs_income, y = Requests_by_pop)) +
 
 ```
 
-
-
-## Analysis on request sources and types
-
-## Analysis by time

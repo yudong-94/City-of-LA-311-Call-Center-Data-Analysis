@@ -99,6 +99,9 @@ cd_top_requests <- function(data, cd) {
 ################## cd_key_stats #####################
 cd_key_stats <- function(data, cd) {
     stats = t(filter(data, `Council District` %in% cd))
+    cd_names = stats[1,]
+    stats = as.data.frame(stats[2:nrow(stats),])
+    colnames(stats) = cd_names
     stats
 }
 

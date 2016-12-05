@@ -1,0 +1,18 @@
+{
+    "contents" : "library(dplyr)\n\n################## cd_top_requests #####################\ncd_top_requests <- function(data, cd) {\n    summary = data %>%\n        filter(CD %in% cd) %>%\n        group_by(RequestType) %>%\n        summarise(count = n()) %>%\n        arrange(-count) %>%\n        top_n(3)\n    colnames(summary) = c(\"Top Requests Type\", \"Requests counts\")\n    summary\n}\n\n\n################## cd_key_stats #####################\ncd_key_stats <- function(data, cd) {\n    stats = t(filter(data, `Council District` %in% cd))\n    cd_names = stats[1,]\n    stats = as.data.frame(stats[2:nrow(stats),])\n    colnames(stats) = cd_names\n    stats\n}\n",
+    "created" : 1480897799292.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2142869578",
+    "id" : "9094F125",
+    "lastKnownWriteTime" : 1480897844,
+    "path" : "~/Desktop/DSO545/Final project/fight-on/Shiny_cd_summary/cd_summary_support.R",
+    "project_path" : "cd_summary_support.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 6,
+    "source_on_save" : false,
+    "type" : "r_source"
+}

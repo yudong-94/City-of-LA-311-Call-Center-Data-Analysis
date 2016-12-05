@@ -1,0 +1,18 @@
+{
+    "contents" : "library(choroplethrZip)\nlibrary(dplyr)\n\n# load(\"all_data_for_shiny.RData\")\n\n\n################## spark #####################\n\n# # using spark  (cmd+shift+c to uncomment the whole paragraph)\n# \n# library(sparklyr)\n# library(dplyr)\n# \n# sc <- spark_connect(master = \"local\")\n# \n# requests_data = copy_to(dest = sc, df = sampled_data, name = \"requests\", overwrite = TRUE)\n# \n# zip_plot_customized_spark = function(data, type) {\n#     requests_zip_filtered = data %>%\n#         filter(RequestType == type) %>%\n#         group_by(ZipCode) %>%\n#         filter(!ZipCode %in% c(\"0\", \"\", \"9008\")) %>%\n#         summarise(value = n())\n#     \n#     mydata <- requests_zip_filtered %>%\n#         collect\n#     \n#     colnames(mydata) = c(\"region\", \"value\") \n#     zip_vec = unique(mydata$region)\n#     \n#     zip_choropleth(mydata, \n#                    zip_zoom = zip_vec, \n#                    title=\"Requests number by zipcode\",\n#                    legend=\"Requests numbers\")\n# }\n# \n# # zip_plot_customized_spark(requests_data, \"Bulky Items\")\n\n\n\n################## zip_plot_customized #####################\n\nzip_plot_customized = function(data, type, time_start, time_end) {\n    requests_zip_filtered = data %>%\n        filter(RequestType %in% type,\n               time_start < CreatedDate, \n               time_end > CreatedDate) %>%\n        group_by(ZipCode) %>%\n        filter(!ZipCode %in% c(\"0\", \"\", \"9008\")) %>%\n        summarise(value = n())\n    \n    colnames(requests_zip_filtered) = c(\"region\", \"value\") \n    zip_vec = unique(requests_zip_filtered$region)\n    \n    zip_choropleth(requests_zip_filtered, \n                   zip_zoom = zip_vec, \n                   title=\"Requests number by zipcode\",\n                   legend=\"Requests numbers\") +\n        scale_fill_brewer(name=\"Requests\", palette=\"OrRd\", drop=FALSE)\n}\n\n# zip_plot_customized(request_data, \"Bulky Items\", \"2015-12-01\", \"2016-03-01\")\n\n\n################## top_zip_list #####################\n\ntop_zip_list <- function(data, type, time_start, time_end) {\n    requests_zip_filtered = data %>%\n        filter(RequestType %in% type,\n               time_start < CreatedDate, \n               time_end > CreatedDate) %>%\n        group_by(ZipCode) %>%\n        filter(!ZipCode %in% c(\"0\", \"\", \"9008\")) %>%\n        summarise(requests = n()) %>%\n        arrange(-requests)\n    \n    colnames(requests_zip_filtered) = c(\"Zip Code\", \"Number of Requests\") \n    \n    return(as.data.frame(requests_zip_filtered))\n}\n\n# top_zip_list(request_data, \"Bulky Items\", \"2015-12-01\", \"2016-03-01\")\n\n\n################## location_to_zip #####################\n# library(ggmap)\n\n# # an inaccurate way to get the zip from Lon and Lat\n# location_to_zip <- function(Lon, Lat) {\n#     if (is.numeric(Lon)) {\n#         res = revgeocode(as.numeric(c(Lon, Lat)), output = \"more\")\n#         res$postal_code\n#     }\n# }\n",
+    "created" : 1480897463035.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3892131595",
+    "id" : "1F3CEF2F",
+    "lastKnownWriteTime" : 1480898004,
+    "path" : "~/Desktop/DSO545/Final project/fight-on/Shiny_zipcode/zip_plot_support.R",
+    "project_path" : "zip_plot_support.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 6,
+    "source_on_save" : false,
+    "type" : "r_source"
+}
