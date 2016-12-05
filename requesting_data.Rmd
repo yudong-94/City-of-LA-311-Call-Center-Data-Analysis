@@ -219,3 +219,18 @@ ggplot(CD_summary, aes(x = Median_hs_income, y = Requests_by_pop)) +
 
 ```
 
+# Wordcloud on request type
+
+```{r wordcloud}
+library(wordcloud)
+library(dplyr)
+
+sample = sample_n(request_data, 10000)
+
+pal = brewer.pal(9, "YlOrBr")
+pal = pal[-c(1:4)]
+
+wordcloud(words = sample$RequestType, random.order = FALSE, colors = pal)
+```
+
+
