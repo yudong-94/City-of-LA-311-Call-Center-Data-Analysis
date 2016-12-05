@@ -219,7 +219,9 @@ ggplot(CD_summary, aes(x = Median_hs_income, y = Requests_by_pop)) +
 
 ```
 
-# Wordcloud on request type
+## Analysis on requests type
+
+Wordcloud on request type
 
 ```{r wordcloud}
 library(wordcloud)
@@ -241,7 +243,65 @@ set.seed(140)
 wordcloud(words = type_summary$RequestType, type_summary$count, 
           colors = type_summary$colorlist, ordered.colors = TRUE,
           rot.per = 0.5)
+```
+
+Requests type frequency and cd characteristics
+
+```{r req_type}
+cd = request_data %>%
+    group_by(CD, RequestType) %>%
+    summarise(count = n()) 
+cd = cd %>%
+    group_by(CD) %>%
+    mutate(req_prop = round(100 * count / sum(count),1))
+cd = filter(cd, !is.na(CD))
+
+cd_merged = merge(cd, CD_summary, by.x = "CD", by.y = "Council District", all.x = TRUE)
+
+cor(filter(cd_merged, RequestType == "Bulky Items")[,c(4:8)])
+
+# cor: 0.63
+cd_merged %>%
+    filter(RequestType == "Bulky Items") %>% 
+    ggplot(aes(x = `Median Household Income($000s)`,
+               y = req_prop)) +
+    geom_point()
+
+
+cor(filter(cd_merged, RequestType == "Graffiti Removal")[,c(4:8)])
+
+# cor: -0.72
+cd_merged %>%
+    filter(RequestType == "Graffiti Removal") %>% 
+    ggplot(aes(x = `Median Household Income($000s)`,
+               y = req_prop)) +
+    geom_point()
+
+cor(filter(cd_merged, RequestType == "Metal/Household Appliances")[,c(4:8)])
+
+# cor:0.86
+cd_merged %>%
+    filter(RequestType == "Metal/Household Appliances") %>% 
+    ggplot(aes(x = `Median Household Income($000s)`,
+               y = req_prop)) +
+    geom_point()
+
+
+cor(filter(cd_merged, RequestType == "Illegal Dumping Pickup")[,c(4:8)])
+
+# cor:0.61
+cd_merged %>%
+    filter(RequestType == "Illegal Dumping Pickup") %>% 
+    ggplot(aes(x = `Unemployment Rate`,
+               y = req_prop)) +
+    geom_point()
 
 ```
 
+The higher the average income, the lower the proportion of Graffiti Removal requests, but the higher the proportion of Bulky Items requests and Metal/Household Appliances requests.
 
+The older the average age, the higher the proportion of Metal/Household Appliances requests and Feedback requests.
+
+The higher the unemployment rate, the higher the proportion of Illegal Dumping Pick requests.
+
+Income/unemployment rate/age has no correlation with the proportion of Electronic Waste, Dead Animal Removal requests, and Homeless Encampment requests.

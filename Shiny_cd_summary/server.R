@@ -41,7 +41,7 @@ server <- function(input, output) {
     
     
     output$wc <- renderPlot({
-        set.seed(140)
+        set.seed(152)
         wordcloud(words = type_summary$RequestType, type_summary$count,
                   colors = type_summary$colorlist, ordered.colors = TRUE,
                   rot.per = 0.5)}
