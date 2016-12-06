@@ -16,9 +16,13 @@ request_types = c("Bulky Items", "Dead Animal Removal", "Graffiti Removal",
                   "Single Streetlight Issue", 
                   "Multiple Streetlight Issue", "Feedback", "Report Water Waste")
 
+social_types = c("Median_Age", "Median_Household_Income")
+
 server <- function(input, output) {
     
-    rv = reactiveValues(cd = c("city of LA"), req_type = "Graffiti Removal")
+    rv = reactiveValues(cd = c("city of LA"), 
+                        req_type = "Metal/Household Appliances",
+                        social_type = "Median_Household_Income")
     
     # if we click the buttom
     observeEvent(input$button_cd, {
@@ -27,6 +31,7 @@ server <- function(input, output) {
 
     observeEvent(input$button_req, {
         rv$req_type = input$request_type
+        rv$social_type = input$social_type
     })
             
      output$plot_income <- renderPlotly(
@@ -54,5 +59,5 @@ server <- function(input, output) {
     output$type_summary <- renderTable(type_summary_table(), 
                                        align = "c", rownames = TRUE, colnames = TRUE)
     
-    output$req_summary <- renderPlot(request_social_plot(rv$req_type))
+    output$req_summary <- renderPlot(request_social_plot(rv$req_type, rv$social_type))
 }

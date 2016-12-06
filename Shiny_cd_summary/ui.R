@@ -15,6 +15,8 @@ request_types = c("Bulky Items", "Dead Animal Removal", "Graffiti Removal",
 
 CD_lists = c(as.character(1:15), "city of LA")
 
+social_types = c("Median_Age", "Median_Household_Income")
+
 ui <- navbarPage(
     
     "Requesting Analysis",
@@ -62,12 +64,18 @@ tabPanel("Requests Type Analysis",
                          label = "Request Type: ", 
                          choices = request_types, 
                          multiple = FALSE, selectize = TRUE,
-                         selected = "Graffiti Removal"),
-             
+                         selected = "Metal/Household Appliances"),
+
+             selectInput(inputId = "social_type", 
+                         label = "Social Characteristics: ", 
+                         choices = social_types, 
+                         multiple = FALSE, selectize = TRUE,
+                         selected = "Median_Household_Income"),
+                                       
              actionButton(inputId = "button_req",
                           label = "Submit"),
              
-             width = 3),
+             width = 4),
          
          mainPanel(
              fluidRow(

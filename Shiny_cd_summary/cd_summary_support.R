@@ -79,18 +79,33 @@ type_summary_table <- function() {
 }
 
 ################## request_social_plot #####################
-request_social_plot <- function(req_type) {
+request_social_plot <- function(req_type, social) {
     selected = zip_merged %>%
-        filter(RequestType == req_type)
+        filter(RequestType == req_type, Median_Household_Income > 0)
     
-    ggplot(selected, aes(x = log(`Median.Income`),
-                         y = req_prop)) +
-        geom_point() +
-        geom_smooth(method = "lm") +
-        ggtitle(paste(req_type, "Requests Proportion v.s. Median Income"),
-                subtitle = paste("correlation:", 
-                                 round(cor(log(selected$`Median.Income`), selected$req_prop),2)
-                                 )) +
-        ylab("Regional Request Proportion") +
-        theme(plot.title = element_text(hjust = 0.5))
+    if (social == "Median_Household_Income") {
+        ggplot(selected, aes(x = log(Median_Household_Income), y = req_prop)) +
+            geom_point() +
+            geom_smooth(method = "lm") +
+            ggtitle(paste(req_type, "Requests Proportion v.s. Median Household Income"),
+                    subtitle = paste("correlation:", 
+                                     round(cor(log(selected$Median_Household_Income), selected$req_prop),2)
+                                     )) +
+            xlab("Log Meidian Household Income") +
+            ylab("Regional Request Proportion") +
+            theme(plot.title = element_text(hjust = 0.5))
+    } else {
+        ggplot(selected, aes(x = Median_Age, y = req_prop)) +
+            geom_point() +
+            geom_smooth(method = "lm") +
+            ggtitle(paste(req_type, "Requests Proportion v.s. Median Age"),
+                    subtitle = paste("correlation:", 
+                                     round(cor(selected$Median_Age, selected$req_prop),2)
+                    )) +
+            xlab("Median Age") +
+            ylab("Regional Request Proportion") +
+            theme(plot.title = element_text(hjust = 0.5))        
+    }
 }
+
+# request_social_plot("Metal/Household Appliances", "Median_Age")
