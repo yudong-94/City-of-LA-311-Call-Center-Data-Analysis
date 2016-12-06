@@ -15,15 +15,13 @@ request_types = c("Bulky Items", "Dead Animal Removal", "Graffiti Removal",
 
 CD_lists = c(as.character(1:15), "city of LA")
 
-social_types = c("Median_Age", "Median_Household_Income")
-
 ui <- navbarPage(
     
     "Requesting Analysis",
     
     fluid = TRUE, 
     
-    tabPanel("Regional Requests Analysis",
+    tabPanel("Council Districts Analysis",
              
              
              sidebarLayout(
@@ -57,43 +55,55 @@ ui <- navbarPage(
                    plotlyOutput(outputId = "plot_unemployment")))
     ),
 
-tabPanel("Requests Type Analysis",
+    tabPanel("Requests Type Analysis",
+             
+             fluidRow(
+                 column(6,
+                        tableOutput(outputId = "type_summary")
+                        ),
+                 
+                 column(4,
+                        plotOutput(outputId = "wc"))),
+             
+             hr(),
+             
+             sidebarPanel(
+                 selectInput(inputId = "request_type", 
+                             label = "Request Type: ", 
+                             choices = request_types, 
+                             multiple = FALSE, selectize = TRUE,
+                             selected = "Graffiti Removal"),
+                                                   
+                 actionButton(inputId = "button_req",
+                              label = "Submit"),
+                 
+                 width = 3),
+             
+             mainPanel(
+                 fluidRow(
+                     plotOutput(outputId = 'req_summary')))
+        
+    ),
+    tabPanel("Department Efficiency Analysis",
+         hr(),
          
          sidebarPanel(
-             selectInput(inputId = "request_type", 
-                         label = "Request Type: ", 
-                         choices = request_types, 
-                         multiple = FALSE, selectize = TRUE,
-                         selected = "Metal/Household Appliances"),
-
-             selectInput(inputId = "social_type", 
-                         label = "Social Characteristics: ", 
-                         choices = social_types, 
-                         multiple = FALSE, selectize = TRUE,
-                         selected = "Median_Household_Income"),
-                                       
-             actionButton(inputId = "button_req",
-                          label = "Submit"),
              
-             width = 4),
+             actionButton(inputId = "dep_source",
+                          label = "Department and request source"),
+             br(),
+             actionButton(inputId = "dep_type",
+                          label = "Department and request type"),
+             br(),
+             actionButton(inputId = "dep_cd",
+                          label = "Department and Council Districts ")
+         ),
+         
          
          mainPanel(
-             fluidRow(
-                 plotOutput(outputId = 'req_summary')))
-         
-),
-
-tabPanel("Requests Efficiency Analysis",
-         
-         fluidRow(
-             column(6,
-                    tableOutput(outputId = "type_summary")
-             ),
-             
-             column(4,
-                    plotOutput(outputId = "wc")))
-         
+             plotOutput("plot")
+         )
+)
 )
 
 
-)
