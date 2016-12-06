@@ -366,7 +366,7 @@ cor(filter(zip_merged, RequestType == "Feedback")[,c(4:7)])
 ```
 
 Unemployment:  
-positive: **graffiti removal 0.55**, homeless encapment 0.62  
+positive: **graffiti removal** 0.55, homeless encapment 0.62  
 negative: bulky items -0.53, electronic waste -0.55, **Metal/Household Appliances** -0.57
 
 Median Household income:  

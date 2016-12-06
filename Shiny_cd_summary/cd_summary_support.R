@@ -64,3 +64,34 @@ employment_plot <- function(cd) {
         theme(plot.title = element_text(hjust = 0.5)) 
 }
 
+
+################## type_summary_table #####################
+type_summary_table <- function() {
+    summary = mutate(type_summary, above = ifelse(overtime == TRUE, "below average", ""))
+    summary = summary %>%
+        select(RequestType, count, above) %>%
+        arrange(-count)
+    
+    colnames(summary) = c("Request Type", "Requests counts", "Update efficiency")
+    summary
+}
+
+################## request_social_plot #####################
+request_social_plot <- function(req_type) {
+    selected = zip_merged %>%
+        filter(RequestType == req_type)
+    
+    ggplot(selected, aes(x = log(`Median.Income`),
+                         y = req_prop)) +
+        geom_point() +
+        geom_smooth(method = "lm") +
+        ggtitle(paste(req_type, "Requests Proportion v.s. Median Income"),
+                subtitle = paste("correlation:", 
+                                 round(cor(log(selected$`Median.Income`), selected$req_prop),2)
+                                 )) +
+        ylab("Regional Request Proportion") +
+        theme(plot.title = element_text(hjust = 0.5))
+}
+
+
+# 

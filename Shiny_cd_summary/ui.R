@@ -40,7 +40,7 @@ ui <- navbarPage(
                  
                  mainPanel(
                      fluidRow(
-                         tableOutput('table1'))
+                         tableOutput('cd_summary'))
 #                      hr(),
 #                      tableOutput('table2'))
             )
@@ -52,10 +52,37 @@ ui <- navbarPage(
             column(6,
                    plotlyOutput(outputId = "plot_income")),
             column(6,
-                   plotlyOutput(outputId = "plot_unemployment"))),
-    
-        hr(),
-    
-        plotOutput(outputId = "wc")
+                   plotlyOutput(outputId = "plot_unemployment")))
+    ),
+
+    tabPanel("Requests Type Analysis",
+             
+             fluidRow(
+                 column(6,
+                        tableOutput(outputId = "type_summary")
+                        ),
+                 
+                 column(4,
+                        plotOutput(outputId = "wc"))),
+             
+             hr(),
+             
+             sidebarPanel(
+                 selectInput(inputId = "request_type", 
+                             label = "Request Type: ", 
+                             choices = request_types, 
+                             multiple = FALSE, selectize = TRUE,
+                             selected = "Graffiti Removal"),
+                                                   
+                 actionButton(inputId = "button_req",
+                              label = "Submit"),
+                 
+                 width = 3),
+             
+             mainPanel(
+                 fluidRow(
+                     plotOutput(outputId = 'req_summary')))
+        
     )
+
 )

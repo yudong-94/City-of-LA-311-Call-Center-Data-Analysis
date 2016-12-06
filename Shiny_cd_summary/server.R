@@ -18,13 +18,17 @@ request_types = c("Bulky Items", "Dead Animal Removal", "Graffiti Removal",
 
 server <- function(input, output) {
     
-    rv = reactiveValues(cd = c("city of LA"))
+    rv = reactiveValues(cd = c("city of LA"), req_type = "Graffiti Removal")
     
     # if we click the buttom
     observeEvent(input$button_cd, {
         rv$cd = input$CD
-    }) 
-    
+    })
+
+    observeEvent(input$button_req, {
+        rv$req_type = input$request_type
+    })
+            
      output$plot_income <- renderPlotly(
          ggplotly(income_plot(rv$cd))
      )
@@ -33,7 +37,7 @@ server <- function(input, output) {
         ggplotly(employment_plot(rv$cd))
     )
     
-    output$table1 <- renderTable(cd_key_stats(CD_summary, cd = rv$cd), 
+    output$cd_summary <- renderTable(cd_key_stats(CD_summary, cd = rv$cd), 
                                  align = "c", rownames = TRUE, colnames = TRUE)
     
 #     output$table2 <- renderTable(cd_top_requests(request_data, cd = rv$cd), 
@@ -46,4 +50,9 @@ server <- function(input, output) {
                   colors = type_summary$colorlist, ordered.colors = TRUE,
                   rot.per = 0.5)}
     )
+    
+    output$type_summary <- renderTable(type_summary_table(), 
+                                       align = "c", rownames = TRUE, colnames = TRUE)
+    
+    output$req_summary <- renderPlot(request_social_plot(rv$req_type))
 }
