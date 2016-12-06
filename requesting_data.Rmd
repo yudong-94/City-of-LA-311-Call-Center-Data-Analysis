@@ -362,8 +362,8 @@ cor(filter(zip_merged, RequestType == "Metal/Household Appliances")[,c(4:7)])
 
 
 Median Household income:  
-positive: **Metal/Household Appliances** 0.78
-negative: **graffiti removal** -0.63
+positive: **Metal/Household Appliances** 0.77
+negative: **graffiti removal** -0.55
 
 Median age:  
 positive: **Metal/Household Appliances** 0.50
