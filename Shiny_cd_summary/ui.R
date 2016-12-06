@@ -21,7 +21,7 @@ ui <- navbarPage(
     
     fluid = TRUE, 
     
-    tabPanel("Council Districts Analysis",
+    tabPanel("Regional Requests Analysis",
              
              
              sidebarLayout(
@@ -55,34 +55,37 @@ ui <- navbarPage(
                    plotlyOutput(outputId = "plot_unemployment")))
     ),
 
-    tabPanel("Requests Type Analysis",
+tabPanel("Requests Type Analysis",
+         
+         sidebarPanel(
+             selectInput(inputId = "request_type", 
+                         label = "Request Type: ", 
+                         choices = request_types, 
+                         multiple = FALSE, selectize = TRUE,
+                         selected = "Graffiti Removal"),
              
+             actionButton(inputId = "button_req",
+                          label = "Submit"),
+             
+             width = 3),
+         
+         mainPanel(
              fluidRow(
-                 column(6,
-                        tableOutput(outputId = "type_summary")
-                        ),
-                 
-                 column(4,
-                        plotOutput(outputId = "wc"))),
+                 plotOutput(outputId = 'req_summary')))
+         
+),
+
+tabPanel("Requests Efficiency Analysis",
+         
+         fluidRow(
+             column(6,
+                    tableOutput(outputId = "type_summary")
+             ),
              
-             hr(),
-             
-             sidebarPanel(
-                 selectInput(inputId = "request_type", 
-                             label = "Request Type: ", 
-                             choices = request_types, 
-                             multiple = FALSE, selectize = TRUE,
-                             selected = "Graffiti Removal"),
-                                                   
-                 actionButton(inputId = "button_req",
-                              label = "Submit"),
-                 
-                 width = 3),
-             
-             mainPanel(
-                 fluidRow(
-                     plotOutput(outputId = 'req_summary')))
-        
-    )
+             column(4,
+                    plotOutput(outputId = "wc")))
+         
+)
+
 
 )

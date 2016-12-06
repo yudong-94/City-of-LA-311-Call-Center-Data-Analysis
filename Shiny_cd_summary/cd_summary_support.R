@@ -2,6 +2,8 @@ library(dplyr)
 library(plotly)
 library(wordcloud)
 
+# load("all_data_for_shiny.RData")
+
 ################## cd_top_requests #####################
 # cd_top_requests <- function(data, cd) {
 #     summary = data %>%
@@ -72,7 +74,7 @@ type_summary_table <- function() {
         select(RequestType, count, above) %>%
         arrange(-count)
     
-    colnames(summary) = c("Request Type", "Requests counts", "Update efficiency")
+    colnames(summary) = c("Request Type", "Requests Counts", "Update Efficiency")
     summary
 }
 
@@ -92,6 +94,3 @@ request_social_plot <- function(req_type) {
         ylab("Regional Request Proportion") +
         theme(plot.title = element_text(hjust = 0.5))
 }
-
-
-# 
