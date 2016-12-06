@@ -1,4 +1,4 @@
-# City of Los Angeles 311 Call Center Tracking Data Analysis Project
+# City of Los Angeles 311 Call Center Data Analysis Project
 
 ---
 
@@ -18,12 +18,12 @@ The goal of our project is to provide insightful geographic, demographic and tim
 > Data Sources
 
 1. 311 Call Center Tracking data  
-[311 Call Center Tracking Dataset](https://data.lacity.org/dataset/311-Call-Center-Tracking-Data/ukiu-8trj/data)  
+[LA 311 Call Center Tracking Dataset](https://data.lacity.org/dataset/311-Call-Center-Tracking-Data/ukiu-8trj/data)  
 Data from 2011/1/1 - 2015/5/31  
 Contains information about different types of service requests from calls  
 
 2. 311 Service Request data  
-[311 Service Request Dataset](https://data.lacity.org/A-Well-Run-City/MyLA311-Service-Request-Data-2016/ndkd-k878/data)  
+[LA 311 Service Request Dataset](https://data.lacity.org/A-Well-Run-City/MyLA311-Service-Request-Data-2016/ndkd-k878/data)  
 Data from 2015/5/8-2016/11/17  
 Contains information about different types of service requests made from different channels  
 
@@ -39,3 +39,10 @@ Contains demographic information of residents living in all 15 council Districts
 L.A. area zip codes and their coordinates (longitude and latitude) accordingly  
 
 ---
+
+> Project on Github
+
+1. Basic Data Processing Codes
+2. Geographical Interactive Application
+3. Time-based Interactive Application
+4. Summary Statistics Interative Application
