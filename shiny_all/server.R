@@ -267,12 +267,12 @@ server <- function(input, output, session) {
       }, height = 400, width = 600)
   })     
   
-  output$plot_income <- renderPlotly(
-      ggplotly(income_plot(rv$cd))
+  output$plot_income <- renderPlot(
+      income_plot(rv$cd)
   )
   
-  output$plot_unemployment <- renderPlotly(
-      ggplotly(employment_plot(rv$cd))
+  output$plot_unemployment <- renderPlot(
+      employment_plot(rv$cd)
   )
   
   output$cd_summary <- renderTable(cd_key_stats(CD_summary, cd = rv$cd), 

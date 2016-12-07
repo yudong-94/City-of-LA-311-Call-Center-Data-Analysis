@@ -212,9 +212,9 @@ ui <- navbarPage(
                         
             fluidRow(
                 column(6,
-                        plotlyOutput(outputId = "plot_income")),
+                        plotOutput(outputId = "plot_income")),
                 column(6,
-                        plotlyOutput(outputId = "plot_unemployment")))
+                        plotOutput(outputId = "plot_unemployment")))
                ),
                
     tabPanel("Requests Type Social Analysis",
