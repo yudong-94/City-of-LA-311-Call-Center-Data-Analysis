@@ -54,7 +54,7 @@ L.A. area zip codes and their coordinates (longitude and latitude) accordingly
 
 > Instructions on using the Shiny App
 
-1. Fork all the contents in the Shiny_Final folder
-2. Make sure all the R packages in the "all_library_data_function.R" file are downloaded
+1. Create a Shiny project and keep all the files in the **Shiny_Final** folder in the project directory
+2. Make sure all the R packages in the **all_library_data_function.R** file are downloaded
 3. Load all the required packages, datasets and functions by `source('all_library_data_function.R')`
-4. Run the Shiny App using ui.R and server.R
+4. Run the Shiny App using **ui.R** and **server.R**
