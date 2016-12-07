@@ -44,5 +44,6 @@ L.A. area zip codes and their coordinates (longitude and latitude) accordingly
 
 1. Basic Data Processing Codes
 2. Geographical Interactive Application
-3. Time-based Interactive Application
-4. Summary Statistics Interative Application
+3. Time-based Analysis
+4. Efficiency Analysis
+5. Social Analysis
