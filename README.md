@@ -47,3 +47,12 @@ L.A. area zip codes and their coordinates (longitude and latitude) accordingly
 3. Time-based Analysis
 4. Efficiency Analysis
 5. Social Analysis
+
+---
+
+> Instruction on using the Shiny App
+
+1. Fork all the contents in the Shiny_Final folder
+2. Make sure all the R packages in the "all_library_data_function.R" file are downloaded
+3. Load all the required packages, datasets and functions by `source('all_library_data_function.R')`
+4. Run the Shiny App using ui.R and server.R
