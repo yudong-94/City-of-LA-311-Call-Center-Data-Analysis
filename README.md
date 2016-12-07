@@ -44,10 +44,10 @@ L.A. area zip codes and their coordinates (longitude and latitude) accordingly
 
 1. Basic Data Processing Codes
 2. Analysis on the dataset
-* Geographical Analysis
-* Time-based Analysis
-* Efficiency Analysis
-* Social Analysis
+  * Geographical Analysis
+  * Time-based Analysis
+  * Efficiency Analysis
+  * Social Analysis
 3. Interactive Web Application based on R Shiny
 
 ---
