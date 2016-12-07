@@ -1,0 +1,370 @@
+---
+title: "requesting_data"
+author: "Yu Dong"
+date: "11/29/2016"
+output: html_document
+---
+
+# Load dataset
+
+Load useful packages and the downloaded dataset from https://data.lacity.org/A-Well-Run-City/MyLA311-Service-Request-Data-2016/ndkd-k878
+
+```{r load}
+setwd("~/Desktop/DSO545/Final project")
+# load("processed1.RData")
+library(dplyr)
+library(ggplot2)
+library(lubridate)
+library(stringr)
+library(ggmap)
+library(plotly)
+library(choroplethrZip) #https://github.com/arilamstein/choroplethrZip
+request_data = read.csv("raw data/MyLA311_Service_Request_Data_2016.csv")
+```
+
+# Preprocessing
+
+Preprocess the data:  
+change the format of time variables using lubridate package  
+
+```{r preprocess}
+request_data$CreatedDate = mdy_hms(request_data$CreatedDate)
+request_data$UpdatedDate = mdy_hms(request_data$UpdatedDate)
+# since there are lots of observations like xx/xx/xxxx 12:00:00AM which leads to unaccurate time records, remove the hour-minute_seconds part
+request_data$ServiceDate = str_replace_all(request_data$ServiceDate, " [0-9]{2}:[0-9]{2}:[0-9]{2} [AP]M", "")
+request_data$ServiceDate = mdy(request_data$ServiceDate)
+# attention: there are many obviously unreasonable records: many records with service date of 1900/01/01, and some other service dates in 2017 or later
+request_data$ClosedDate = mdy_hms(request_data$ClosedDate)
+# adjust data in zipcode column
+request_data$ZipCode = str_replace_all(request_data$ZipCode, "[a-zA-Z ,]*", "")
+```
+
+Calculate new variables:  
+1. extract the month, weekday and hour the request created  
+2. create the response period/ update duration
+
+```{r new variables}
+# extract the month, weekday and hour of CreatedDate
+request_data$month_created = month(request_data$CreatedDate)
+request_data$weekday_created = wday(request_data$CreatedDate, label = TRUE)
+request_data$hour_created = hour(request_data$CreatedDate)
+
+# calculate response period (ClosedDate - CreatedDate)
+request_data$response_period = round((request_data$ClosedDate - request_data$CreatedDate) / (60 * 60),2)  # round to 2 digits, in hours
+
+# special attention: the percentage of requests without a ClosedDate: 0.546
+nrow(filter(request_data, is.na(ClosedDate)))/ nrow(request_data)
+
+# caulculate update duration (UpdatedDate - CreatedDate)
+request_data$duration = round((request_data$UpdatedDate-request_data$CreatedDate)/(60*60),2)
+request_data = mutate(request_data, update_duration = ifelse(duration <= 0, 0, duration))
+request_data$duration = NULL
+```
+
+# Trial run for sampled data
+
+Sampling 1000 observations from the whole dataset.
+
+```{r sampling}
+# load("processed_requests2.RData")
+set.seed(1)
+sampled_data = sample_n(request_data, 1000)
+```
+
+## Geographical analysis
+
+Plot the contour plot for all the calls, we can find that there are two centers.
+
+```{r map}
+LA_map = qmap("Los Angeles", zoom = 10, maptype = "road")
+LA_map + 
+    stat_density2d(data = sampled_data,
+                   aes(x = Longitude, y = Latitude, fill = ..level..),
+                   geom = "polygon", alpha = 0.3) +
+    scale_fill_gradient(low = "white", high = "darkred")
+```
+
+Analysis on zipcode
+
+```{r map2}
+sampled_zip = merge(sampled_data, zipcode, by.x = "ZipCode", by.y = "zip")
+LA_map +   
+    geom_point(data = sampled_data,
+               aes(x = Longitude, y = Latitude),
+               size = 5, alpha = 0.1, color = "darkred")
+
+requests_zip = sampled_data %>% 
+    group_by(ZipCode) %>%
+    filter(!ZipCode %in% c("0", "")) %>%
+    summarise(value = n())
+colnames(requests_zip) = c("region", "value") 
+zip_vec = unique(requests_zip$region)
+
+# plot all zips in LA
+zip_choropleth(requests_zip,
+               county_zoom=6037, 
+               title="Requests number by zipcode",
+               legend="Requests numbers")
+
+# plot only the zips appear in the data
+zip_choropleth(requests_zip, 
+               zip_zoom = zip_vec, 
+               title="Requests number by zipcode",
+               legend="Requests numbers")
+
+```
+
+Plot for the whole dataset
+
+```{r all data}
+request_data_plot = select(request_data, ZipCode, RequestType)
+
+requests_zip = request_data %>% 
+    group_by(ZipCode) %>%
+    filter(!ZipCode %in% c("0", "", "9008")) %>%
+    summarise(value = n())
+colnames(requests_zip) = c("region", "value") 
+
+zip_vec = unique(requests_zip$region)
+
+# plot all zips in LA
+zip_choropleth(requests_zip,
+               county_zoom=6037, 
+               title="Requests numbers by zipcode",
+               legend="Requests numbers")
+
+# plot only the zips appear in the data
+zip_choropleth(requests_zip, 
+               zip_zoom = zip_vec, 
+               title="Requests numbers by zipcode",
+               legend="Requests numbers") +
+    scale_fill_brewer(name="Population", palette="OrRd", drop=FALSE)
+```
+
+Contrast with population by zipcode
+
+```{r pop zip}
+population_zip = read.csv("zip_population_2010_census.csv")
+population_zip = select(population_zip, Zip.Code, Total.Population)
+colnames(population_zip) = c("region", "value")
+population_zip$region = as.character(population_zip$region)
+zip_vec2 = unique(population_zip$region)
+zip_choropleth(population_zip, 
+               zip_zoom = zip_vec, 
+               title="Population by zipcode",
+               legend="Population")
+```
+
+Making interative plots
+
+```{r plotly}
+p1 = zip_choropleth(requests_zip, 
+               zip_zoom = zip_vec, 
+               title="Requests numbers by zipcode",
+               legend="Requests numbers")
+ggplotly(p1)
+p2 = zip_choropleth(population_zip, 
+               zip_zoom = zip_vec, 
+               title="Population by zipcode",
+               legend="Population")
+ggplotly(p2)
+```
+
+Summary statistics
+
+```{r stat}
+requests_zip %>%
+    mutate(requests_prop = round(value / sum(value), 3)) %>%
+    arrange(-requests_prop) %>%
+    top_n(10)
+
+population_zip %>%
+    filter(region %in% zip_vec) %>%
+    mutate(pop_prop = round(value / sum(value), 3)) %>%
+    arrange(-pop_prop) %>%
+    top_n(10)
+```
+
+The requests are more concentrated in certain areas, and there are some differences between the lists of most frequent zipcodes
+
+Analysis by CD
+
+```{r CD}
+CD_stat = read.csv("CD summary statisitcs.csv")
+
+# calculate total requests number and average update duration
+CD_stat2 = request_data %>%
+    filter(!is.na(CD)) %>%
+    group_by(CD) %>%
+    summarise(count = n(), 
+              avg_duration = round(mean(update_duration),2))
+
+CD_summary = merge(CD_stat, CD_stat2, by.x = "CD", by.y = "CD", all.x = TRUE)
+CD_summary$count[16] = nrow(request_data)
+CD_summary$avg_duration[16] = round(mean(request_data$update_duration),2)
+
+CD_summary$request_pop = round(CD_summary$count / CD_summary$Population.000s., 2)
+colnames(CD_summary) = c("Council District", "Population(000s)", "Median Age", 
+                         "Median Household Income($000s)", "Unemployment Rate", 
+                         "Top1 Occupation", "Top2 Occupation", 
+                         "Top3 Occupation", "Requests Counts", 
+                         "Average Update Duration(min)", 
+                         "Requests per 1000 Residents")
+
+ggplot(CD_summary, aes(x = `Unemployment Rate`, y = `Requests per 1000 Residents`)) +
+    geom_point()
+
+ggplot(CD_summary, aes(x = Median_hs_income, y = Requests_by_pop)) +
+    geom_point()
+
+```
+
+## Analysis on requests type
+
+Wordcloud on request type
+
+```{r wordcloud}
+library(wordcloud)
+
+type_summary = request_data %>%
+    group_by(RequestType) %>%
+    summarise(avg_update = round(mean(update_duration),2), count = n())
+
+type_summary = type_summary %>%
+    mutate(overtime = ifelse(avg_update > mean(sample$update_duration), TRUE, FALSE))
+
+type_summary = type_summary %>%
+    mutate(colorlist = ifelse(overtime == TRUE, "#bf812d", "#35978f"))
+
+# pal = brewer.pal(9, "BrBG")
+# pal = pal[c(4,4,5,5,6,6,7,7,8,8,9,9)]
+
+set.seed(140)
+wordcloud(words = type_summary$RequestType, type_summary$count, 
+          colors = type_summary$colorlist, ordered.colors = TRUE,
+          rot.per = 0.5)
+```
+
+Requests type frequency and cd characteristics
+
+```{r req_type}
+cd = request_data %>%
+    group_by(CD, RequestType) %>%
+    summarise(count = n()) 
+cd = cd %>%
+    group_by(CD) %>%
+    mutate(req_prop = round(100 * count / sum(count),1))
+cd = filter(cd, !is.na(CD))
+
+cd_merged = merge(cd, CD_summary, by.x = "CD", by.y = "Council District", all.x = TRUE)
+
+cor(filter(cd_merged, RequestType == "Bulky Items")[,c(4:8)])
+
+# cor: 0.63
+cd_merged %>%
+    filter(RequestType == "Bulky Items") %>% 
+    ggplot(aes(x = `Median Household Income($000s)`,
+               y = req_prop)) +
+    geom_point()
+
+
+cor(filter(cd_merged, RequestType == "Graffiti Removal")[,c(4:8)])
+
+# cor: -0.72
+cd_merged %>%
+    filter(RequestType == "Graffiti Removal") %>% 
+    ggplot(aes(x = `Median Household Income($000s)`,
+               y = req_prop)) +
+    geom_point()
+
+cor(filter(cd_merged, RequestType == "Metal/Household Appliances")[,c(4:8)])
+
+# cor:0.86
+cd_merged %>%
+    filter(RequestType == "Metal/Household Appliances") %>% 
+    ggplot(aes(x = `Median Household Income($000s)`,
+               y = req_prop)) +
+    geom_point()
+
+
+cor(filter(cd_merged, RequestType == "Illegal Dumping Pickup")[,c(4:8)])
+
+# cor:0.61
+cd_merged %>%
+    filter(RequestType == "Illegal Dumping Pickup") %>% 
+    ggplot(aes(x = `Unemployment Rate`,
+               y = req_prop)) +
+    geom_point()
+
+```
+
+The higher the average income, the lower the proportion of Graffiti Removal requests, but the higher the proportion of Bulky Items requests and Metal/Household Appliances requests.
+
+The older the average age, the higher the proportion of Metal/Household Appliances requests and Feedback requests.
+
+The higher the unemployment rate, the higher the proportion of Illegal Dumping Pick requests.
+
+Income/unemployment rate/age has no correlation with the proportion of Electronic Waste, Dead Animal Removal requests, and Homeless Encampment requests.
+
+Unemployment Rate:  
+positive: Illegal Dumping Pick 0.61, Graffiti Removal 0.51
+negative: Feedback -0.57, Single Streetlight Issue -0.73, Metal/Household Appliances -0.66, Multiple Streetlight Issue -0.65, Report Water Waste -0.61
+
+Median Household Income:
+positive: Bulky Items 0.63, Metal/Household Appliances 0.86, Feedback 0.53, Single Streetlight Issue 0.57, Multiple Streetlight Issue 0.54
+negative: Graffiti Removal -0.72
+
+Median Age:
+positive: Bulky Items 0.60, Metal/Household Appliances 0.69, Feedback 0.77 
+negative: Graffiti Removal -0.62
+
+
+Requests type frequency and zipcode characteristics
+
+```{r req&zip}
+zip_summary = read.csv("zip summary statistics_2014.csv")
+
+zip = request_data %>%
+    group_by(ZipCode, RequestType) %>%
+    summarise(count = n()) %>%
+    group_by(ZipCode) %>%
+    mutate(req_prop = round(100 * count / sum(count),1))
+zip = filter(zip, !is.na(ZipCode), ZipCode != "", ZipCode != "0")
+
+zip_merged = merge(zip, zip_summary, by.x = "ZipCode", by.y = "Zip")
+zip_merged = select(zip_merged, ZipCode, RequestType, count, req_prop, Median_Age, Unemployment_Rate, Median_Household_Income)
+
+#cor(filter(zip_merged, RequestType == "Bulky Items")[,c(4:7)])
+
+#cor(filter(zip_merged, RequestType == "Dead Animal Removal")[,c(4:7)])
+
+cor(filter(zip_merged, RequestType == "Graffiti Removal")[,c(4:7)])
+# median income and graffiti removal 0.55
+
+#cor(filter(zip_merged, RequestType == "Homeless Encampment")[,c(4:7)])
+
+cor(filter(zip_merged, RequestType == "Metal/Household Appliances")[,c(4:7)])
+# median income and Metal/Household Appliances 0.77, median age and Metal/Household Appliances 0.50
+
+#cor(filter(zip_merged, RequestType == "Illegal Dumping Pickup")[,c(4:7)])
+
+#cor(filter(zip_merged, RequestType == "Electronic Waste")[,c(4:7)])
+
+#cor(filter(zip_merged, RequestType == "Report Water Waste")[,c(4:7)])
+
+#cor(filter(zip_merged, RequestType == "Single Streetlight Issue")[,c(4:7)])
+
+#cor(filter(zip_merged, RequestType == "Multiple Streetlight Issue")[,c(4:7)])
+
+#cor(filter(zip_merged, RequestType == "Feedback")[,c(4:7)])
+
+```
+
+
+Median Household income:  
+positive: **Metal/Household Appliances** 0.77
+negative: **graffiti removal** -0.55
+
+Median age:  
+positive: **Metal/Household Appliances** 0.50
+negative: /

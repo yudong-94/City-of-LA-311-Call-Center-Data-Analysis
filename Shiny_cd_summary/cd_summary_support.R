@@ -1,6 +1,7 @@
 library(dplyr)
 library(plotly)
 library(wordcloud)
+library(lubridate)
 
 # load("all_data_for_shiny.RData")
 
@@ -74,7 +75,7 @@ type_summary_table <- function() {
         select(RequestType, count, above) %>%
         arrange(-count)
     
-    colnames(summary) = c("Request Type", "Requests Counts", "Update Efficiency")
+    colnames(summary) = c("Request Type", "Requests counts", "Update Efficiency")
     summary
 }
 
@@ -90,7 +91,7 @@ request_social_plot <- function(req_type, social) {
             ggtitle(paste(req_type, "Requests Proportion v.s. Median Household Income"),
                     subtitle = paste("correlation:", 
                                      round(cor(log(selected$Median_Household_Income), selected$req_prop),2)
-                                     )) +
+                    )) +
             xlab("Log Meidian Household Income") +
             ylab("Regional Request Proportion") +
             theme(plot.title = element_text(hjust = 0.5))
@@ -109,3 +110,73 @@ request_social_plot <- function(req_type, social) {
 }
 
 # request_social_plot("Metal/Household Appliances", "Median_Age")
+
+################## efficiency analysis #####################
+### compare department efficiency and request source - dep_source
+
+# dep_eff<- request_data %>%
+#     mutate(update_time = UpdatedDate - CreatedDate) %>%
+#     group_by(Owner, RequestSource) %>%
+#     summarise(avg_update = mean(update_time)) %>%
+#     filter(!avg_update == 0)
+# 
+# dep_eff$avg_update = as.numeric(dep_eff$avg_update)
+# dep_eff$avg_update = dep_eff$avg_update/6400
+# round(dep_eff$avg_update,2)
+
+def_eff_plot <- function() {
+    ggplot(dep_eff, aes(x = Owner, y = RequestSource, fill = avg_update)) +
+        geom_tile() +
+        scale_fill_gradient(low = "white", high = "darkred") +
+        ggtitle("Service response time across department and request source") +
+        xlab("Department assigned") +
+        ylab("Source of Request") +
+        theme(axis.text.x = element_text(angle = 30, hjust = 1)) +
+        guides(fill=guide_legend(title="Average response(hours)"))
+}
+
+### type resolution efficiency divided by department - dep_type
+
+# type_eff <- request_data %>%
+#     mutate(update_time = UpdatedDate - CreatedDate) %>%
+#     group_by(Owner,RequestType) %>%
+#     summarise(avg_update = mean(update_time)) %>%
+#     filter(!avg_update == 0)
+# 
+# type_eff$avg_update = as.numeric(type_eff$avg_update)
+# type_eff$avg_update = type_eff$avg_update/6400
+# round(type_eff$avg_update,2)
+
+type_eff_plot <- function() {
+    ggplot(type_eff, aes(x = RequestType, y = avg_update,color = Owner)) +
+        geom_point(size = 5) +
+        theme(axis.text.x = element_text(angle = 30, hjust = 1)) +
+        ggtitle("Service response time across department and request type") +
+        xlab("Service Request Type") +
+        ylab("Average response(hours)") +
+        theme(axis.text.x = element_text(angle = 30, hjust = 1)) +
+        guides(fill=guide_legend(title="Department")) 
+}
+
+
+### department efficiency in different cd - dep_cd
+
+# cd_eff <- request_data %>%
+#     mutate(update_time = UpdatedDate - CreatedDate) %>%
+#     group_by(Owner,CD) %>%
+#     summarise(avg_update = mean(update_time)) %>%
+#     filter(!avg_update == 0) %>%
+#     filter(!is.na(CD))
+# 
+# cd_eff$avg_update = as.numeric(cd_eff$avg_update)
+# cd_eff$avg_update = cd_eff$avg_update/6400
+# round(cd_eff$avg_update,2)
+
+cd_eff_plot <- function() {
+    ggplot(cd_eff, aes(x = factor(CD), y = avg_update,color = Owner)) +
+        geom_point(size = 5) +
+        ggtitle("Resolution Efficiency Across Council Districts and Department") +
+        xlab("Council Districts") +
+        ylab("Average updated time(hours)") +
+        guides(fill = guide_legend(title = "Department"))
+}

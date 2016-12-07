@@ -43,57 +43,75 @@ ui <- navbarPage(
                  mainPanel(
                      fluidRow(
                          tableOutput('cd_summary'))
-#                      hr(),
-#                      tableOutput('table2'))
-            )
-        ),
-
-        hr(),
-    
-        fluidRow(
-            column(6,
-                   plotlyOutput(outputId = "plot_income")),
-            column(6,
-                   plotlyOutput(outputId = "plot_unemployment")))
-    ),
-
-tabPanel("Requests Type Analysis",
-         
-         sidebarPanel(
-             selectInput(inputId = "request_type", 
-                         label = "Request Type: ", 
-                         choices = request_types, 
-                         multiple = FALSE, selectize = TRUE,
-                         selected = "Metal/Household Appliances"),
-
-             selectInput(inputId = "social_type", 
-                         label = "Social Characteristics: ", 
-                         choices = social_types, 
-                         multiple = FALSE, selectize = TRUE,
-                         selected = "Median_Household_Income"),
-                                       
-             actionButton(inputId = "button_req",
-                          label = "Submit"),
-             
-             width = 4),
-         
-         mainPanel(
-             fluidRow(
-                 plotOutput(outputId = 'req_summary')))
-         
-),
-
-tabPanel("Requests Efficiency Analysis",
-         
-         fluidRow(
-             column(6,
-                    tableOutput(outputId = "type_summary")
+                     #                      hr(),
+                     #                      tableOutput('table2'))
+                 )
              ),
              
-             column(4,
-                    plotOutput(outputId = "wc")))
+             hr(),
+             
+             fluidRow(
+                 column(6,
+                        plotlyOutput(outputId = "plot_income")),
+                 column(6,
+                        plotlyOutput(outputId = "plot_unemployment")))
+    ),
+    
+    tabPanel("Requests Type Analysis",
+             
+             sidebarPanel(
+                 selectInput(inputId = "request_type", 
+                             label = "Request Type: ", 
+                             choices = request_types, 
+                             multiple = FALSE, selectize = TRUE,
+                             selected = "Metal/Household Appliances"),
+                 
+                 selectInput(inputId = "social_type", 
+                             label = "Social Characteristics: ", 
+                             choices = social_types, 
+                             multiple = FALSE, selectize = TRUE,
+                             selected = "Median_Household_Income"),
+                 
+                 actionButton(inputId = "button_req",
+                              label = "Submit"),
+                 
+                 width = 4),
+             
+             mainPanel(
+                 fluidRow(
+                     plotOutput(outputId = 'req_summary')))
+             
+    ),
+    
+    tabPanel("Requests Efficiency Analysis",
+             
+             fluidRow(
+                 column(6,
+                        tableOutput(outputId = "type_summary")
+                 ),
+                 
+                 column(4,
+                        plotOutput(outputId = "wc")))
+             
+    ),
+    
+tabPanel("Department Efficiency Analysis",
          
+         column(3,
+         actionButton(inputId = "dep_source",
+                     label = "Department and request source")),
+         
+         column(3,
+         actionButton(inputId = "dep_type",
+                     label = "Department and request type")),
+         
+         column(3,
+         actionButton(inputId = "dep_cd",
+                     label = "Department and Council Districts")),
+         
+         plotOutput("dep_plot")
+         )
+
 )
 
 
-)

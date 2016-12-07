@@ -33,7 +33,47 @@ server <- function(input, output) {
         rv$req_type = input$request_type
         rv$social_type = input$social_type
     })
-            
+    
+    observeEvent(input$dep_source, {
+        output$plot <- renderPlot({
+            p <- ggplot(dep_eff, aes(x = Owner, y = RequestSource, fill = avg_update)) +
+                geom_tile() +
+                scale_fill_gradient(low = "white", high = "darkred") +
+                ggtitle("Service response time across department and request source") +
+                xlab("Department assigned") +
+                ylab("Source of Request") +
+                theme(axis.text.x = element_text(angle = 30, hjust = 1)) +
+                guides(fill=guide_legend(title="Average response(hours)"))
+            print(p)
+        }, height = 400, width = 600)
+    })     
+    
+    observeEvent(input$dep_cd, {
+        output$plot <- renderPlot({
+            p <- ggplot(cd_eff, aes(x = factor(CD), y = avg_update,color = Owner)) +
+                geom_point(size = 5) +
+                ggtitle("Resolution Efficiency Across Council Districts and Department") +
+                xlab("Council Districts") +
+                ylab("Average updated time(hours)") +
+                guides(fill = guide_legend(title = "Department"))
+            print(p)
+        }, height = 400, width = 600)
+    })     
+    
+    observeEvent(input$dep_type, {
+        output$plot <- renderPlot({
+            p <- ggplot(type_eff, aes(x = RequestType, y = avg_update,color = Owner)) +
+                geom_point(size = 5) +
+                theme(axis.text.x = element_text(angle = 30, hjust = 1)) +
+                ggtitle("Service response time across department and request type") +
+                xlab("Service Request Type") +
+                ylab("Average response(hours)") +
+                theme(axis.text.x = element_text(angle = 30, hjust = 1)) +
+                guides(fill=guide_legend(title="Department"))
+            print(p)
+        }, height = 400, width = 600)
+    })     
+    
      output$plot_income <- renderPlotly(
          ggplotly(income_plot(rv$cd))
      )
@@ -60,4 +100,21 @@ server <- function(input, output) {
                                        align = "c", rownames = TRUE, colnames = TRUE)
     
     output$req_summary <- renderPlot(request_social_plot(rv$req_type, rv$social_type))
+    
+    
+    observeEvent(input$dep_source, {
+        output$dep_plot <- renderPlot(
+            def_eff_plot(), height = 400, width = 600)
+    })     
+    
+    observeEvent(input$dep_cd, {
+        output$dep_plot <- renderPlot(
+            cd_eff_plot(), height = 400, width = 600)
+    })     
+    
+    observeEvent(input$dep_type, {
+        output$dep_plot <- renderPlot(
+            type_eff_plot(), height = 400, width = 600)
+    })     
+    
 }
