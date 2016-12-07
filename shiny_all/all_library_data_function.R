@@ -9,7 +9,7 @@ library(dplyr)
 ## convert shp
 library(rgdal)
 library(rgeos)
-library(raster)
+# library(raster)
 library(splancs)
 library(sp)
 library(maptools)
