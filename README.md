@@ -43,14 +43,16 @@ L.A. area zip codes and their coordinates (longitude and latitude) accordingly
 > Project on Github
 
 1. Basic Data Processing Codes
-2. Geographical Interactive Application
-3. Time-based Analysis
-4. Efficiency Analysis
-5. Social Analysis
+2. Analysis on the dataset
+* Geographical Analysis
+* Time-based Analysis
+* Efficiency Analysis
+* Social Analysis
+3. Interactive Web Application based on R Shiny
 
 ---
 
-> Instruction on using the Shiny App
+> Instructions on using the Shiny App
 
 1. Fork all the contents in the Shiny_Final folder
 2. Make sure all the R packages in the "all_library_data_function.R" file are downloaded
