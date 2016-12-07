@@ -6,7 +6,7 @@ ui <- navbarPage(
     
     fluid = TRUE, 
     
-    tabPanel("Time-based Analysis",
+    tabPanel("Time-based Requests Type Analysis",
              
              sidebarPanel(
                  
@@ -30,6 +30,40 @@ ui <- navbarPage(
                  
                  br(),
                  
+                 actionButton(inputId = "type_month",
+                              label = "Request Type by Month", width = 200),
+                 
+                 br(),
+                 
+                 actionButton(inputId = "type_weekday",
+                              label = "Request Type by Weekday", width = 200)
+                
+           ),
+           
+           mainPanel(
+               plotOutput("plot")
+               )
+    ),
+    
+    tabPanel("Time-based Requests Source Analysis",
+
+             sidebarPanel(
+                 
+                 actionButton(inputId = "source_count",
+                              label = "Requests by Source", width = 200),
+                 
+                 br(),
+                 
+                 actionButton(inputId = "source_type_count",
+                              label = "Requests by Source and Type", width = 200),
+                 
+                 br(),
+                 
+                 actionButton(inputId = "source_eff",
+                              label = "Efficiency by Source", width = 200),
+                 
+                 br(),
+                 
                  actionButton(inputId = "source_month",
                               label = "Request Source by Month", width = 200),
                  
@@ -40,16 +74,6 @@ ui <- navbarPage(
                  
                  br(),
                  
-                 actionButton(inputId = "type_month",
-                              label = "Request Type by Month", width = 200),
-                 
-                 br(),
-                 
-                 actionButton(inputId = "type_weekday",
-                              label = "Request Type by Weekday", width = 200),
-                 
-                 br(),
-                 
                  actionButton(inputId = "calls_month",
                               label = "Calls by Month", width = 200),
                  
@@ -57,10 +81,11 @@ ui <- navbarPage(
                  
                  actionButton(inputId = "calls_hour",
                               label = "Calls by Hour", width = 200)
-           ),
-           
-           mainPanel(
-               plotOutput("plot")
-               )
+             ),
+             
+             mainPanel(
+                 plotOutput("plot2")
+             )
     )
+              
 )

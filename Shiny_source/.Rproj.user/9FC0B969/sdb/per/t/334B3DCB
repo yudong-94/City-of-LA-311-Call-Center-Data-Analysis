@@ -1,0 +1,17 @@
+{
+    "contents" : "\n# This is the user-interface definition of a Shiny web application.\n# You can find out more about building applications with Shiny here:\n#\n# http://shiny.rstudio.com\n#\n\nlibrary(shiny)\nui <- fluidPage(\n  tabPanel(\"Request Source Analysis\",\n           \n           column(3,\n                  actionButton(inputId = \"source_count\",\n                               label = \"Requests by Source\")),\n           \n           column(3,\n                  actionButton(inputId = \"source_type_count\",\n                               label = \"Requests by Source and Type\")),\n           \n           column(3,\n                  actionButton(inputId = \"source_eff\",\n                               label = \"Efficiency by Source\")),\n           \n           plotOutput(\"plot\")\n  )\n  \n  \n)\n  \n",
+    "created" : 1481073687978.000,
+    "dirty" : false,
+    "encoding" : "ISO8859-1",
+    "folds" : "",
+    "hash" : "2238292013",
+    "id" : "334B3DCB",
+    "lastKnownWriteTime" : 1481069201,
+    "path" : "~/Desktop/DSO545/Final project/fight-on/Shiny_source/ui.R",
+    "project_path" : "ui.R",
+    "properties" : {
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "type" : "r_source"
+}

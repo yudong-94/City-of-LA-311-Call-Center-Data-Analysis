@@ -1,15 +1,16 @@
 library(ggplot2)
 library(dplyr)
 library(lubridate)
-load("processed_requests2.RData")
+# load("processed_requests2.RData")
+
 request_data$duration_hrs = round((request_data$UpdatedDate - request_data$CreatedDate)/3600, 
                                   digits = 2)
-source=request_data%>%
+source_data =request_data%>%
   group_by(RequestSource)%>%
   summarise(count=n())%>%
   arrange(-count)
 
-ggplot(source,aes(x=reorder(RequestSource,-count),y=count))+geom_bar(stat="identity",fill = "paleturquoise3")+
+ggplot(source_data,aes(x=reorder(RequestSource,-count),y=count))+geom_bar(stat="identity",fill = "paleturquoise3")+
   theme(axis.text.x = element_text(angle = 30, hjust = 1))+
   xlab("")+
   ylab("")+

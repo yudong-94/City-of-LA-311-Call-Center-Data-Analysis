@@ -1,4 +1,5 @@
 # load("processed_requests2.RData")
+# load("data for shiny.RData")
 
 library(ggplot2)
 library(dplyr)
@@ -164,6 +165,58 @@ weekday_hour_heatmap <- function() {
 #   theme(axis.text.x = element_text(angle = 30, hjust = 1))
 # # Bulky Item, Graffiti Removal are most frequent 
 
+
+# Request sources
+source_count <- function() {
+  source_data =request_subset%>%
+    group_by(RequestSource)%>%
+    summarise(count=n())%>%
+    arrange(-count)
+  
+  ggplot(source_data,aes(x=reorder(RequestSource,-count),y=count))+
+    geom_bar(stat="identity",fill = "paleturquoise3")+
+    xlab("")+
+    ylab("")+
+    ggtitle("Request per source")+
+    geom_text(aes(label = count), vjust = -1,size=2.5)+ 
+    theme_classic()+
+    theme(axis.text.x = element_text(angle = 30, hjust = 1))
+}
+
+
+# Source and type
+
+source_type_count <- function() {
+  request12=request_subset%>%
+    group_by(RequestSource,RequestType)%>%
+    summarise(Count=n())
+  
+  ggplot(request12,aes(x=RequestSource,y=RequestType,fill=Count))+
+    geom_tile()+
+    scale_fill_gradient(low = "mistyrose", high = "deeppink3") +
+    theme_classic() +
+    ylab("") +
+    xlab("") +
+    ggtitle("Requests by Source and Type") +
+    theme(axis.text.x = element_text(angle = 30, hjust = 1))
+}
+
+# Request sources efficiency
+
+source_eff <- function() {
+  request13=request_subset%>%
+    group_by(RequestSource)%>%
+    summarise(mean=round(mean(duration_hrs),2))
+  
+  ggplot(request13,aes(x=reorder(RequestSource,-mean),y=mean))+
+    geom_bar(stat="identity",fill = "paleturquoise3")+
+    ggtitle("Request Efficiency by Request Source") +
+    xlab("Reqeust Source")+
+    ylab("Average Duration")+
+    geom_text(aes(label = mean), vjust = -1,size=2.5)+
+    theme_classic()+
+    theme(axis.text.x = element_text(angle = 30, hjust = 1))
+}
 
 # Request Source by month   
 
