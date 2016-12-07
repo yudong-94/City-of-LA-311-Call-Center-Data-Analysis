@@ -6,12 +6,15 @@ library(scales)
 library(lattice)
 library(dplyr)
 
+## convert shp
 library(rgdal)
+library(rgeos)
+library(raster)
+library(splancs)
 library(sp)
 library(maptools)
 
 ## Others
-library(plotly)
 library(lubridate)
 library(viridis)
 library(wordcloud)
